@@ -1,0 +1,141 @@
+* {
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  font-size: 2vmax;
+  min-height: 100%;
+  max-width: 75vmax;
+  margin: 0 auto;
+  padding: 3vmax 1vmax;
+  background: #302833;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+#loading {
+  justify-content: center;
+  display: flex;
+  flex-grow: 1;
+  padding-bottom: 15vmax;
+}
+#loading p {
+  align-self: center;
+  font-size: 4.5vmax;
+  font-weight: 900;
+}
+.anime-blink {
+  animation-duration: 1s;
+  animation-name: blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-play-state: running;
+}
+@keyframes blink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100;
+  }
+}
+#menu {
+  flex-grow: 1;
+}
+#menu ul {
+  align-items: center;
+  flex-grow: 4;
+}
+#item-container .item {
+  height: 33vh;
+  border: 1px dotted white;
+}
+#waypoint {
+  height: 64px;
+  text-align: center;
+  font-weight: 900;
+}
+#license {
+  flex-grow: 1;
+  justify-content: center;
+}
+#license > div {
+  max-width: 66.7vmax;
+}
+footer {
+  width: 100%;
+  font-size: 1.75vmax;
+  font-weight: bold;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+footer p {
+  margin: 0.5em 0;
+}
+h1 {
+  text-align: center;
+  font-size: 4.5vmax;
+}
+h2 {
+  margin: 1vmax 0;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+.center {
+  text-align: center;
+}
+.bold {
+  font-weight: bold;
+}
+.bold9 {
+  font-weight: 900;
+}
+.small {
+  font-size: 1.75vmax;
+}
+.button {
+  width: 75%;
+  display: inline-flex;
+  justify-content: center;
+  background: white;
+  color: #302833;
+  border-radius: 2px;
+  font-weight: 900;
+  margin-top: 3vmax;
+  flex-grow: 1;
+}
+.button span {
+  font-size: 5vmax;
+  align-self: center;
+}
+.flex {
+  display: flex;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+.flex-middle {
+  display: flex;
+  align-items: center;
+}
+#close {
+  font-size: 2.5vmax;
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  background: white;
+  color: #302833;
+  padding: 0.75vmax;
+  border-radius: 2px;
+  width: 4vmax;
+  text-align: center;
+  font-weight: 900;
+}

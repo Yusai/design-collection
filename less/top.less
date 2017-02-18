@@ -1,0 +1,170 @@
+@black: #302833;
+
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+    font-size: 2vmax;
+    min-height: 100%;
+    max-width: 75vmax;
+    margin: 0 auto;
+    padding: 3vmax 1vmax;
+    background: @black;
+    color: white;
+    .flex-column;
+}
+
+header {
+}
+
+#loading {
+    justify-content: center;
+    display: flex;
+    flex-grow: 1;
+    padding-bottom: 15vmax;
+    p {
+        align-self: center;
+        font-size: 4.5vmax;
+        font-weight: 900;
+    }
+}
+
+.anime-blink {
+    //Animation
+    animation-duration: 1s;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-play-state: running;
+}
+
+@keyframes blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 100;
+    }
+}
+
+#menu {
+    flex-grow: 1;
+    ul {
+        align-items: center;
+        flex-grow:4;
+    }
+}
+
+#item-container {
+    .item {
+        height: 33vh;
+        border: 1px dotted white;
+    }
+}
+#waypoint {
+    height: 64px;
+    text-align: center;
+    .bold9;
+}
+
+#license {
+    flex-grow: 1;
+    justify-content: center;
+    > div {
+        max-width: 66.7vmax;
+    }
+}
+
+footer {
+    width: 100%;
+    .small;
+    .bold;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    p {
+        margin: 0.5em 0;
+    }
+}
+
+h1 {
+    .center;
+    font-size: 4.5vmax;
+}
+
+h2 {
+    margin: 1vmax 0;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.center {
+    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.bold9 {
+    font-weight: 900;
+}
+
+.small {
+    font-size: 1.75vmax;
+}
+
+.button {
+    width: 75%;
+    display: inline-flex;
+    justify-content: center;
+    background: white;
+    color: @black;
+    border-radius: 2px;
+    .bold9;
+    margin-top: 3vmax;
+    flex-grow: 1;
+    span {
+        font-size: 5vmax;
+        align-self: center;
+    }
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    .flex;
+    flex-direction: column;
+}
+
+.flex-middle {
+    .flex;
+    align-items: center;
+}
+
+#close {
+    font-size: 2.5vmax;
+    position: fixed;
+    top: 4px;
+    right: 4px;
+    background: white;
+    color: @black;
+    padding: 0.75vmax;
+    border-radius: 2px;
+    width: 4vmax;
+    text-align: center;
+    .bold9;
+}
