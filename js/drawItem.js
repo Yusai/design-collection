@@ -5,7 +5,7 @@ function selectJSON(index) {
     $(window).scroll(function() {
         var waypointTop = $('#waypoint').offset().top;
         var scrollTop = $(document).scrollTop();
-        if ((waypointTop - scrollTop + 96) < $(window).height()) {
+        if ((waypointTop - scrollTop + 64) < $(window).height()) {
             loadItem(data);
         }
     });
@@ -14,17 +14,20 @@ function selectJSON(index) {
 function loadItem(data) {
     var tmp = data.getJSON();
     if (tmp) {
+        var dl = $("<dl class='small' style='display:none;'></dl>");
         var target = $("<dd class='item-image'><span class='bold9 anime-blink'>Now Loading...</span></dd>")
         $('#item-container').append(
             $("<li class='item'></li>").append(
-                $("<dl class='small'></dl>")
+               dl
                     .append("<dt class='bold9'>Image</dt>")
                     .append(target)
                     .append("<dt class='bold9'>Source</dt>")
-                    .append("<dd class='link'><a href='" + tmp.url + "'>" + tmp.title + "</a></dd>")
+                    .append("<dd class='link'><a href='//goo.gl/" + tmp.url + "' target='_blank'>" + tmp.title + "</a></dd>")
             )
         );
-        loadSVG(target, tmp.svg);
+        target.load('svg/' + data.dir + "/" + tmp.svg + '.svg', function () {
+            dl.fadeIn(500);
+        });
     }
     if (!data.check()) {
         $('#waypoint').hide();
@@ -40,12 +43,4 @@ function addItemFirst(data) {
             arguments.callee(data);
         }
     }
-}
-
-function loadSVG(target, file) {
-    console.log(target);
-    console.log(file);
-    var svg = {};
-    target.load('svg/nypl/' + file + '.svg');
-    return svg;
 }

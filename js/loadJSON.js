@@ -1,13 +1,15 @@
 var json_data = (function() {
     var data = [];
-    function loadJSON(fileList) {
-        if (fileList.length == 0) {
+    function loadJSON(fileObj) {
+        if (fileObj.length == 0) {
             $("#loading").fadeToggle(250, function(){
                 $("#menu").fadeToggle(250);
             });
         } else {
-            $.getJSON("json/" + fileList.pop() + ".json", function(json) {
+            var obj = fileObj.pop();
+            $.getJSON("json/" + obj.file + ".json", function(json) {
                 data.push({
+                    dir: obj.dir,
                     json: json,
                     index: 0,
                     getJSON: function() {
@@ -26,10 +28,19 @@ var json_data = (function() {
                         return (this.index < this.json.length);
                     }
                 });
-                loadJSON(fileList);
+                loadJSON(fileObj);
             });
         }
         return data;
     }
-    return loadJSON(['traced-a-photo', 'by-pioneer']);
+    return loadJSON([
+        {
+            file: 'traced-a-photo',
+            dir: 'photo'
+        },
+        {
+            file: 'by-pioneer',
+            dir: 'pioneer'
+        }
+    ]);
 })();

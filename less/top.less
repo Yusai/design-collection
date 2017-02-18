@@ -63,18 +63,25 @@ header {
 }
 
 #item-container {
+    display: flex;
+    flex-wrap: wrap;
     .item {
-        border-radius: 2px;
-        background: white;
-        color: @black;
-        margin-bottom: 3vmax;
+        width: 100%;
+        //debug
+        //min-height: 50vmax;
         dl {
+            width: 100%;
+            border-radius: 2px;
+            background: white;
+            color: @black;
             margin: 0;
-            padding: 5vmax 0.5vmax;
+            padding: 0.5vmax;
+            .flex-column;
         }
         dt {
             padding: 0.5vmax;
             border-left: 2vmax solid @black;
+            font-size: 1.5vmax;
         }
         dd {
             margin: 0;
@@ -91,8 +98,82 @@ header {
 
 .item-image {
     padding: 3vmax 1vmax;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
     svg {
-        max-height: 25vmax;
+        width: 100%;
+        max-height: 15vmin;
+    }
+}
+
+@media (max-width: 640px) {
+    #item-container {
+        .item {
+            margin-bottom: 1vmax;
+        }
+    }
+}
+
+@media (min-width: 640px) {
+    #item-container {
+        li {
+            width: 50% !important;
+            display: inline-flex;
+            padding: 0.5vmax;
+        }
+        .item {
+            dt {
+                font-size: 1.25vmax;
+            }
+        }
+        .link {
+            font-size: 1.25vmax;
+        }
+        svg {
+            max-height: 8.5vmin;
+        }
+    }
+}
+
+@media (min-width: 1280px) {
+    #item-container {
+        li {
+            width: 33.3% !important;
+        }
+        svg {
+            max-height: 7vmin;
+        }
+        .item {
+            dt {
+                padding: 0.2vmax;
+                border-left-width: 1.2vmax;
+                font-size: 0.9vmax;
+            }
+        }
+        .link {
+            font-size: 1vmax;
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    #item-container {
+        li {
+            width: 25% !important;
+        }
+        svg {
+            max-height: 4vmin;
+        }
+        .item {
+            dt {
+                padding: 0.25vmax;
+                border-left-width: 1.25vmax;
+            }
+        }
+        .link {
+            font-size: 0.75vmax;
+        }
     }
 }
 
@@ -198,4 +279,6 @@ ul {
     width: 4vmax;
     text-align: center;
     .bold9;
+    box-shadow: 0px 0px 0.33vmax @black;
 }
+
