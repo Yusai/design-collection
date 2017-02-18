@@ -12,7 +12,6 @@ $("#menu .button").click(function() {
 $('#close').click(function() {
     $("#main").fadeOut(250, function() {
         $('#waypoint').hide();
-//        removeWaypoint();
         $("#menu").fadeIn(250);
         $('h1').removeClass('small');
         $('#item-container').html("");

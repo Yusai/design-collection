@@ -64,10 +64,38 @@ header {
 
 #item-container {
     .item {
-        height: 33vh;
-        border: 1px dotted white;
+        border-radius: 2px;
+        background: white;
+        color: @black;
+        margin-bottom: 3vmax;
+        dl {
+            margin: 0;
+            padding: 5vmax 0.5vmax;
+        }
+        dt {
+            padding: 0.5vmax;
+            border-left: 2vmax solid @black;
+        }
+        dd {
+            margin: 0;
+            padding: 0.5vmax;
+        }
+        .link {
+            text-align: right;
+            a {
+                text-decoration: none;
+            }
+        }
     }
 }
+
+.item-image {
+    padding: 3vmax 1vmax;
+    svg {
+        max-height: 25vmax;
+    }
+}
+
 #waypoint {
     height: 64px;
     text-align: center;
@@ -91,12 +119,15 @@ footer {
     left: 0;
     p {
         margin: 0.5em 0;
+        text-shadow: 0px 0px 0.33vmax @black;
     }
 }
 
 h1 {
     .center;
     font-size: 4.5vmax;
+    margin: 0;
+    margin-bottom: 5vmax;
 }
 
 h2 {

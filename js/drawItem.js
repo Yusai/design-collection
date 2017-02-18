@@ -12,19 +12,21 @@ function selectJSON(index) {
 }
 
 function loadItem(data) {
-    console.log(data.index)
     var tmp = data.getJSON();
     if (tmp) {
+        var target = $("<dd class='item-image'><span class='bold9 anime-blink'>Now Loading...</span></dd>")
         $('#item-container').append(
             $("<li class='item'></li>").append(
-                $("<dl></dl>")
-                    .append("<dt>Image</dt>").append("<dd>" + tmp.url + "</dd>")
-                    .append(
-                        $("<dt></dt>").append("<a href='" + tmp.url + "'>" + tmp.title + "</a>")
-                    )
+                $("<dl class='small'></dl>")
+                    .append("<dt class='bold9'>Image</dt>")
+                    .append(target)
+                    .append("<dt class='bold9'>Source</dt>")
+                    .append("<dd class='link'><a href='" + tmp.url + "'>" + tmp.title + "</a></dd>")
             )
         );
-    } else {
+        loadSVG(target, tmp.svg);
+    }
+    if (!data.check()) {
         $('#waypoint').hide();
         $(window).off('scroll');
     }
@@ -38,4 +40,12 @@ function addItemFirst(data) {
             arguments.callee(data);
         }
     }
+}
+
+function loadSVG(target, file) {
+    console.log(target);
+    console.log(file);
+    var svg = {};
+    target.load('svg/nypl/' + file + '.svg');
+    return svg;
 }

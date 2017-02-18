@@ -50,8 +50,34 @@ body {
   flex-grow: 4;
 }
 #item-container .item {
-  height: 33vh;
-  border: 1px dotted white;
+  border-radius: 2px;
+  background: white;
+  color: #302833;
+  margin-bottom: 3vmax;
+}
+#item-container .item dl {
+  margin: 0;
+  padding: 5vmax 0.5vmax;
+}
+#item-container .item dt {
+  padding: 0.5vmax;
+  border-left: 2vmax solid #302833;
+}
+#item-container .item dd {
+  margin: 0;
+  padding: 0.5vmax;
+}
+#item-container .item .link {
+  text-align: right;
+}
+#item-container .item .link a {
+  text-decoration: none;
+}
+.item-image {
+  padding: 3vmax 1vmax;
+}
+.item-image svg {
+  max-height: 25vmax;
 }
 #waypoint {
   height: 64px;
@@ -75,10 +101,13 @@ footer {
 }
 footer p {
   margin: 0.5em 0;
+  text-shadow: 0px 0px 0.33vmax #302833;
 }
 h1 {
   text-align: center;
   font-size: 4.5vmax;
+  margin: 0;
+  margin-bottom: 5vmax;
 }
 h2 {
   margin: 1vmax 0;
