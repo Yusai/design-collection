@@ -1,15 +1,10 @@
 function checkWaypoint() {
     var waypointTop = $('#waypoint').offset().top;
     var scrollTop = $(document).scrollTop();
-    console.log(waypointTop - scrollTop + 32);
-    console.log($(window).height())
     return (waypointTop - scrollTop + 32) < $(window).height();
 }
 
-function selectJSON(index) {
-    var data = json_data[index];
-    data.resetIndex();
-    addItem(data);
+function scrollON (data) {
     $(window).scroll(function() {
         if (checkWaypoint()) {
             addItem(data);
@@ -17,8 +12,16 @@ function selectJSON(index) {
     });
 }
 
-var loadItem = function(data) {
+function selectJSON(index) {
+    var data = json_data[index];
+    data.resetIndex();
+    addItem(data);
+    scrollON(data);
+}
+
+function loadItem(data) {
     var tmp = data.getJSON();
+    console.log('index : %d', data.index);
     if (!data.check()) {
         $('#waypoint').hide();
         $(window).off('scroll');
@@ -37,6 +40,7 @@ var loadItem = function(data) {
                     .append("<dd class='link'><a href='//goo.gl/" + tmp.url + "' target='_blank'>" + tmp.title + "</a></dd>")
             )
         );
+        $(window).off('scroll');
         $.ajax({
             type: 'get',
             url: 'svg/' + data.dir + '/' + tmp.svg + '.svg',
@@ -49,6 +53,7 @@ var loadItem = function(data) {
             dfd.reject();
         }).always(function() {
             dl.fadeIn(500);
+            scrollON(data);
         });
         return dfd.promise();
     } else {
@@ -59,8 +64,11 @@ var loadItem = function(data) {
 function addItem(data) {
     //画面内にwaypointがいたらアイテムを追加する
     if (checkWaypoint()) {
-        loadItem(data).then(function() {
-            addItem(data);
-        });
+        var tmp = loadItem(data);
+        if (tmp) {
+            tmp.then(function() {
+                addItem(data);
+            });
+        }
     }
 }
