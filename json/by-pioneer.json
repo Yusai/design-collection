@@ -1,32 +1,45 @@
-[
-  {
-    "title": "Fulton Ferry House. - 2",
-    "svg": "Fulton_Ferry_House2",
-    "url": "Z7Gjrw",
-    "size": 1.23
-  },
-  {
-    "title": "View from East River Bridge.",
-    "svg": "View_from_East_River_Bridge",
-    "url": "uwewVE",
-    "size": 2.73
-  },
-  {
-    "title": "Cooking supper.",
-    "svg": "Cooking_supper",
-    "url": "jGLlNZ",
-    "size": 4.72
-  },
-  {
-    "title": "Taking breath.",
-    "svg": "Taking_breath",
-    "url": "Gj2jA9",
-    "size": 4.75
-  },
-  {
-    "title": "Houghton Michigan July,1889",
-    "svg": "Houghton_Michigan_July_1889",
-    "url": "ScacfC",
-    "size": 7.28
-  }
-]
+ {
+  "dir" : "pioneer",
+  "json": [
+    {
+      "title": "Houghton Michigan July,1889",
+      "svg": "Houghton_Michigan_July_1889_b",
+      "url": "ScacfC"
+    },
+    {
+      "title": "Fulton Ferry House.",
+      "svg": "Fulton_Ferry_House2",
+      "url": "Z7Gjrw"
+    },
+    {
+      "title": "Cooking supper.",
+      "svg": "Cooking_supper_b",
+      "url": "jGLlNZ"
+    },
+    {
+      "title": "View from East River Bridge.",
+      "svg": "View_from_East_River_Bridge",
+      "url": "uwewVE"
+    },
+    {
+      "title": "Cooking supper.",
+      "svg": "Cooking_supper_a",
+      "url": "jGLlNZ"
+    },
+    {
+      "title": "Taking breath.",
+      "svg": "Taking_breath",
+      "url": "Gj2jA9"
+    },
+    {
+      "title": "Houghton Michigan July,1889",
+      "svg": "Houghton_Michigan_July_1889_a",
+      "url": "ScacfC"
+    },
+    {
+      "title": "North River Ferry Boat, N.Y.",
+      "svg": "North_River_Ferry_Boat_N.Y",
+      "url": "VyQJNT"
+    }
+  ]
+}

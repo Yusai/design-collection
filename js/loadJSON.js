@@ -6,11 +6,11 @@ var json_data = (function() {
                 $("#menu").fadeToggle(250);
             });
         } else {
-            var obj = fileObj.pop();
-            $.getJSON("json/" + obj.file + ".json", function(json) {
+            var file = fileObj.pop();
+            $.getJSON("json/" + file + ".json", function(json) {
                 data.push({
-                    dir: obj.dir,
-                    json: json,
+                    dir: json.dir,
+                    json: json.json,
                     index: 0,
                     getJSON: function() {
                         if (this.check()) {
@@ -33,14 +33,5 @@ var json_data = (function() {
         }
         return data;
     }
-    return loadJSON([
-        {
-            file: 'traced-a-photo',
-            dir: 'photo'
-        },
-        {
-            file: 'by-pioneer',
-            dir: 'pioneer'
-        }
-    ]);
+    return loadJSON(['traced-a-photo', 'by-pioneer']);
 })();

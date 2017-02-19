@@ -1,7 +1,10 @@
-[
-  {
-    "title": "Dummy",
-    "svg": "Dummy",
-    "url": "Dummy"
-  }
-]
+{
+	"dir" : "photo",
+	"json":[
+	  {
+	    "title": "Dummy",
+	    "svg": "Dummy",
+	    "url": "Dummy"
+	  }
+	]
+}
