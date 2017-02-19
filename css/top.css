@@ -8,13 +8,21 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
   font-size: 2vmax;
   min-height: 100%;
-  max-width: 75vmax;
   margin: 0 auto;
-  padding: 3vmax 1vmax;
+  padding: 5vmax 1vmax;
+  padding-top: 10vmax;
   background: #302833;
   color: white;
   display: flex;
   flex-direction: column;
+}
+header {
+  position: fixed;
+  text-shadow: 0px 0px 1px #302833;
+  z-index: 1;
+  width: 100%;
+  top: 3vmax;
+  left: 0;
 }
 #loading {
   justify-content: center;
@@ -49,15 +57,21 @@ body {
   align-items: center;
   flex-grow: 4;
 }
-#item-container {
+#item-container,
+#zoom-container {
   display: flex;
   flex-wrap: wrap;
 }
-#item-container .item {
-  width: 100%;
+#item-container .item,
+#zoom-container .item {
+  position: relative;
+  left: 0;
+  top: 0;
 }
-#item-container .item dl {
+#item-container .item dl,
+#zoom-container .item dl {
   width: 100%;
+  height: 100%;
   border-radius: 2px;
   background: white;
   color: #302833;
@@ -66,39 +80,76 @@ body {
   display: flex;
   flex-direction: column;
 }
-#item-container .item dt {
+#item-container .item dt,
+#zoom-container .item dt {
   padding: 0.5vmax;
   border-left: 2vmax solid #302833;
   font-size: 1.5vmax;
 }
-#item-container .item dd {
+#item-container .item dd,
+#zoom-container .item dd {
   margin: 0;
   padding: 0.5vmax;
 }
-#item-container .item .link {
+#item-container .item .link,
+#zoom-container .item .link {
   text-align: right;
 }
-#item-container .item .link a {
+#item-container .item .link a,
+#zoom-container .item .link a {
   text-decoration: none;
+}
+@keyframes spread {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
 }
 .item-image {
   padding: 3vmax 1vmax;
   flex-grow: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 .item-image svg {
   width: 100%;
-  max-height: 15vmin;
+  min-height: 12.5vmin;
+  max-height: 10vmax;
 }
-@media (max-width: 640px) {
+#zoom-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+#zoom-container .item {
+  width: 100%;
+  padding: 0.25vmax;
+  animation-duration: 0.2s;
+  animation-name: spread;
+  animation-fill-mode: forwards;
+}
+#zoom-container .item svg {
+  max-height: 100%;
+}
+#zoom-container .item .link {
+  font-size: 1.5vmax;
+}
+@media (max-width: 480px) {
   #item-container .item {
+    width: 100%;
     margin-bottom: 1vmax;
   }
 }
-@media (min-width: 640px) {
+@media (min-width: 480px) {
   #item-container li {
-    width: 50% !important;
+    width: 50%;
     display: inline-flex;
     padding: 0.5vmax;
   }
@@ -108,13 +159,10 @@ body {
   #item-container .link {
     font-size: 1.25vmax;
   }
-  #item-container svg {
-    max-height: 8.5vmin;
-  }
 }
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
   #item-container li {
-    width: 33.3% !important;
+    width: 33.3%;
   }
   #item-container svg {
     max-height: 7vmin;
@@ -127,10 +175,19 @@ body {
   #item-container .link {
     font-size: 1vmax;
   }
+  #item-container .anime-blink,
+  #item-container #waypoint span {
+    font-size: 1.8vmin;
+  }
 }
-@media (min-width: 1920px) {
+@media (min-width: 1024px) {
   #item-container li {
-    width: 25% !important;
+    width: 25%;
+  }
+}
+@media (min-width: 1280px) {
+  #item-container li {
+    width: 20%;
   }
   #item-container svg {
     max-height: 4vmin;
@@ -142,11 +199,45 @@ body {
   #item-container .link {
     font-size: 0.75vmax;
   }
+  #item-container .anime-blink,
+  #item-container #waypoint span {
+    font-size: 1.25vmin;
+  }
+}
+@media (min-width: 1920px) {
+  #item-container li {
+    width: 12.5%;
+  }
+  #item-container svg {
+    max-height: 5vmax;
+    min-height: auto;
+  }
+  #item-container .anime-blink,
+  #item-container #waypoint span {
+    font-size: 0.8vmin;
+  }
 }
 #waypoint {
-  height: 64px;
-  text-align: center;
+  width: 100%;
   font-weight: 900;
+  animation-duration: 1s;
+  animation-name: blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-play-state: running;
+}
+#waypoint div {
+  width: 100%;
+  padding: 1vmax;
+  background: white;
+  align-items: center;
+  justify-content: center;
+  display: inline-flex;
+  border-radius: 2px;
+}
+#waypoint span {
+  background: white;
+  color: #302833;
 }
 #license {
   flex-grow: 1;
@@ -171,7 +262,6 @@ h1 {
   text-align: center;
   font-size: 4.5vmax;
   margin: 0;
-  margin-bottom: 5vmax;
 }
 h2 {
   margin: 1vmax 0;
@@ -205,7 +295,7 @@ ul {
   flex-grow: 1;
 }
 .button span {
-  font-size: 5vmax;
+  font-size: 8vmin;
   align-self: center;
 }
 .flex {
@@ -222,6 +312,7 @@ ul {
 #close {
   font-size: 2.5vmax;
   position: fixed;
+  z-index: 2;
   top: 4px;
   right: 4px;
   background: white;

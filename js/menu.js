@@ -17,3 +17,11 @@ $('#close').click(function() {
         $('#item-container').html("");
     });
 });
+
+$('#zoom-container .item-image').on('click', function() {
+        $('#item-container, #close').fadeIn(250, function() {
+        });
+            zoomEvent.off();
+    $('#zoom-container').fadeOut(250, function() {
+    });
+});
