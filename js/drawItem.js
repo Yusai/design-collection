@@ -1,37 +1,42 @@
-function checkWaypoint() {
-    var waypointTop = $('#waypoint').offset().top;
-    var scrollTop = $(document).scrollTop();
-    return (waypointTop - scrollTop + 32) < $(window).height();
-}
-
-function scrollON (data) {
-    $(window).scroll(function() {
-        if (checkWaypoint()) {
-            addItem(data);
+var waypoint = (function() {
+    return {
+        on: function() {
+            $('#item-container').append($("<li id='waypoint'><span class='anime-blink'>Now Loading...</span></li>"));
+        },
+        off: function() {
+            $('#waypoint').remove();
         }
-    });
-}
+    };
+})();
+
+var scrollEvent = (function() {
+    return {
+        on: function(data) {
+            $(window).on('scroll orientationchange', function() {
+                addItem(data);
+            });
+        },
+        off: function() {
+            $(window).off('scroll orientationchange');
+        }
+    };
+})();
 
 function selectJSON(index) {
     var data = json_data[index];
     data.resetIndex();
+    waypoint.on();
     addItem(data);
-    scrollON(data);
 }
 
 function loadItem(data) {
-    var tmp = data.getJSON();
     console.log('index : %d', data.index);
-    if (!data.check()) {
-        $('#waypoint').hide();
-        $(window).off('scroll');
-    }
-    //
+    var tmp = data.getJSON();
+    var dfd = $.Deferred();
     if (tmp) {
         var dl = $("<dl class='small' style='display:none;'></dl>");
-        var dfd = $.Deferred();
         var target = $("<dd class='item-image'><span class='bold9 anime-blink'>Now Loading...</span></dd>")
-        $('#item-container').append(
+        $('#waypoint').before(
             $("<li class='item'></li>").append(
                dl
                     .append("<dt class='bold9'>Image</dt>")
@@ -40,35 +45,43 @@ function loadItem(data) {
                     .append("<dd class='link'><a href='//goo.gl/" + tmp.url + "' target='_blank'>" + tmp.title + "</a></dd>")
             )
         );
-        $(window).off('scroll');
         $.ajax({
             type: 'get',
             url: 'svg/' + data.dir + '/' + tmp.svg + '.svg',
             dataType: 'xml',
         }).done(function(data) {
             target.html($(data).find('svg'));
-            dfd.resolve();
         }).fail(function(data) {
             target.find('span').text('Image Not Found.');
-            dfd.reject();
         }).always(function() {
             dl.fadeIn(500);
-            scrollON(data);
+            dfd.resolve();
         });
         return dfd.promise();
     } else {
-        return false;
+        return dfd.reject();
     }
 }
 
 function addItem(data) {
-    //画面内にwaypointがいたらアイテムを追加する
-    if (checkWaypoint()) {
-        var tmp = loadItem(data);
-        if (tmp) {
-            tmp.then(function() {
+    if (!data.check()) {
+        console.log('item loaded')
+        waypoint.off();
+        scrollEvent.off();
+        return;
+    }
+    //
+    var waypointTop = $('#waypoint').offset().top;
+    var scrollTop = $(document).scrollTop();
+    if ((waypointTop - scrollTop + 32) < $(window).height()) {
+        scrollEvent.off();
+        loadItem(data)
+            .done(function() {
                 addItem(data);
+                scrollEvent.on(data);
+            })
+            .fail(function() {
+                console.log('error')
             });
-        }
     }
 }
