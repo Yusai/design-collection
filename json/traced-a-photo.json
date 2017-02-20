@@ -1,10 +1,15 @@
 {
 	"dir" : "photo",
 	"json":[
-	  {
-	    "title": "Dummy",
-	    "svg": "Dummy",
-	    "url": "Dummy"
-	  }
+		{
+			"title" : "raspberry",
+			"svg" : "raspberry", 
+			"url" : "4iJ8a9"
+		},
+		{
+		    "title": "Dummy",
+		    "svg": "Dummy",
+		    "url": "Dummy"
+		}
 	]
 }

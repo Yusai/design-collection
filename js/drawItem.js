@@ -4,7 +4,6 @@ var waypoint = (function() {
             $('#item-container').append($("<li id='waypoint'><div><span>Now Loading...</span></div></li>"));
         },
         off: function() {
-            // $('#waypoint').remove();
         }
     };
 })();
@@ -36,7 +35,6 @@ function addItem(data) {
         scrollEvent.off();
         return;
     }
-    //
     var waypointTop = $('#waypoint').offset().top;
     var scrollTop = $(document).scrollTop();
     if ((waypointTop - scrollTop + 12) < $(window).height()) {
@@ -63,51 +61,26 @@ function loadItem(data) {
         $('#waypoint').before(
             li.append(
                dl
-                    // .append("<dt class='bold9'>Image</dt>")
                     .append(target)
-                    // .append("<dt class='bold9'>Source</dt>")
-                    // .append("<dd class='link'><a href='//goo.gl/" + tmp.url + "' target='_blank'>" + tmp.title + "</a></dd>")
-                    // .attr({
-                    //     title: tmp.title,
-                    //     source_url : tmp.url
-                    // })
+                    .attr({
+                        title: tmp.title,
+                        source_url : tmp.url
+                    })
             )
         );
         $.ajax({
             type: 'get',
             url: 'svg/' + data.dir + '/' + tmp.svg + '.svg',
             dataType: 'xml',
-        }).done(function(data) {
+        }).done(function(svg) {
             target
-                .html($(data).find('svg'))
+                .html($(svg).find('svg'))
                 .on('click', function() {
                     zoomEvent.on();
-                    console.log(tmp)
                     var svg = $(this).find('svg').clone();
-                    $('#item-container, #close').fadeOut(100, function() {
-                        $('#zoom-container').find('.item-image')
-                            .html(svg);
-                        $('#zoom-container').find('.link')
-                            .html("<a href='//goo.gl/" + tmp.url + "' target='_blank'>" + tmp.title + "</a>");
-                        $('#zoom-container').fadeIn(100);
-                    });
-                    
-                    // var li = $(this).parents('li');
-                    // if (li.hasClass('attention')) {
-                    //     li.fadeOut(100, function() {
-                    //         li.removeClass('attention');
-                    //         $('#item-container').find('li').fadeIn(100, zoomEvent.off());
-                    //         $('#close').fadeIn();
-                    //     });
-                    // } else {
-                    //     zoomEvent.on();
-                    //     $('#close').fadeOut();
-                    //     $('#item-container').find('li').fadeOut(100, function() {
-                    //         li.fadeIn().addClass('attention');
-                    //     });
-                    // }
+                    createZoom(svg, tmp);
                 });
-        }).fail(function(data) {
+        }).fail(function() {
             target.find('span').text('Image Not Found.');
         }).always(function() {
             if ($('#item-container').find('.attention').length == 0) {
@@ -124,11 +97,33 @@ function loadItem(data) {
 var zoomEvent = {
     scrollTop: 0,
     on: function() {
-        console.log('zoom-open')
         this.scrollTop = $(document).scrollTop();
     },
     off: function() {
-        console.log('zoom-close')
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
+
+function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+    }));
+};
+
+function createZoom(svg, data) {
+    $('#item-container, #close').fadeOut(100, function() {
+        $('#zoom-container').find('.item-image')
+            .html(svg);
+        $('#zoom-container').find('.link')
+            .html("<a href='//goo.gl/" + data.url + "' target='_blank'>" + data.title + "</a>");
+        var serializer = new XMLSerializer();
+        var source = serializer.serializeToString(svg[0])
+        var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
+        $('#download').find('a')
+            .attr({
+                'href' : url,
+                'download' : data.svg + '.svg'
+            });
+        $('#zoom-container').fadeIn(100);
+    });
+}

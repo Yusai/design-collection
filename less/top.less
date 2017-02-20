@@ -1,6 +1,5 @@
 @black: #302833;
 
-
 * {
     box-sizing: border-box;
 }
@@ -13,7 +12,6 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
     font-size: 2vmax;
     min-height: 100%;
-    // max-width: 75vmax;
     margin: 0 auto;
     padding: 5vmax 1vmax;
     padding-top: 10vmax;
@@ -26,7 +24,6 @@ header {
     position: fixed;
     text-shadow: 0px 0px 1px @black;
     z-index: 1;
-    // text-align: center;
     width: 100%;
     top: 3vmax;
     left: 0;
@@ -45,7 +42,6 @@ header {
 }
 
 .anime-blink {
-    //Animation
     animation-duration: 1s;
     animation-name: blink;
     animation-iteration-count: infinite;
@@ -76,12 +72,10 @@ header {
     .item {
         dl {
             width: 100%;
-            height: 100%;
             border-radius: 2px;
             background: white;
             color: @black;
             margin: 0;
-            padding: 0.5vmax;
             .flex-column;
         }
         dt {
@@ -91,11 +85,13 @@ header {
         }
         dd {
             margin: 0;
-            padding: 0.5vmax;
+            padding: 0.75vmax;
         }
         .link {
             text-align: right;
             a {
+                color: #b7282e;
+                font-weight: 900;
                 text-decoration: none;
             }
         }
@@ -103,24 +99,6 @@ header {
         left: 0;
         top: 0;
     }
-    // .attention {
-    //     position: absolute;
-    //     top: 0;
-    //     left: 0;
-    //     padding: 0.25vmax;
-    //     z-index: 1;
-    //     width: 100%;
-    //     //Animation
-    //     animation-duration: 0.2s;
-    //     animation-name: spread;
-    //     animation-fill-mode: forwards;
-    //     svg {
-    //         max-height: 100%;
-    //     }
-    //     .link {
-    //         font-size: 1.5vmax;
-    //     }
-    // }
 }
 
 @keyframes spread {
@@ -133,16 +111,15 @@ header {
 }
 
 .item-image {
-    padding: 3vmax 1vmax;
+    // padding: 3vmax 1vmax;
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
     svg {
         width: 100%;
-        min-height: 12.5vmin;
-        max-height: 10vmax;
+        min-height: 10vmin;
+        max-height: 18vmin;
     }
 }
 
@@ -156,16 +133,25 @@ header {
     .item {
         width: 100%;
         padding: 0.25vmax;
-        //Animation
         animation-duration: 0.2s;
         animation-name: spread;
         animation-fill-mode: forwards;
+        dl {
+            height: 100%;
+            padding: 0.5vmax;
+        }
+        .item-image {
+            padding: 1.25vmax;
+        }
         svg {
             max-height: 100%;
         }
         .link {
             font-size: 1.5vmax;
         }
+    }
+    .item-image {
+        height: 100%;
     }
 }
 
@@ -176,6 +162,7 @@ header {
             margin-bottom: 1vmax;
         }
         svg {
+            max-height: 50vmin;
         }
     }
 }
@@ -195,19 +182,16 @@ header {
         .link {
             font-size: 1.25vmax;
         }
-        svg {
-            // max-height: 8.5vmin;
-        }
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
     #item-container {
         li {
             width: 33.3%;
         }
         svg {
-            max-height: 7vmin;
+            // max-height: 7vmin;
         }
         .item {
             dt {
@@ -238,9 +222,6 @@ header {
         li {
             width: 20%;
         }
-        svg {
-            max-height: 4vmin;
-        }
         .item {
             dt {
                 padding: 0.25vmax;
@@ -262,8 +243,8 @@ header {
             width: 12.5%;
         }
         svg {
-            max-height: 5vmax;
-            min-height: auto;
+            // max-height: 5vmax;
+            // min-height: auto;
         }
         .anime-blink, #waypoint span {
             font-size: 0.8vmin;
@@ -272,16 +253,11 @@ header {
 }
 
 #waypoint {
-    // height: 3vmax;
     width: 100%;
-    // text-align: center;
-    // align-items: center;
-    // justify-content: center;
     .bold9;
     .anime-blink;
     div {
         width: 100%;
-        // height: 100%;
         padding: 1vmax;
         background: white;
         align-items: center;
@@ -320,7 +296,6 @@ h1 {
     .center;
     font-size: 4.5vmax;
     margin: 0;
-    // margin-bottom: 5vmax;
 }
 
 h2 {
