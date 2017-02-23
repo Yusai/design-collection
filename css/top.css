@@ -192,6 +192,9 @@ header {
   #item-container li {
     width: 25%;
   }
+  .item-image .small {
+    font-size: 2vmin;
+  }
 }
 @media (min-width: 1280px) {
   #item-container li {
@@ -208,6 +211,9 @@ header {
   #item-container #waypoint span {
     font-size: 1.25vmin;
   }
+  .item-image .small {
+    font-size: 1.8vmin;
+  }
 }
 @media (min-width: 1920px) {
   #item-container li {
@@ -217,15 +223,13 @@ header {
   #item-container #waypoint span {
     font-size: 0.8vmin;
   }
+  .item-image .small {
+    font-size: 1.2vmin;
+  }
 }
 #waypoint {
   width: 100%;
   font-weight: 900;
-  animation-duration: 1s;
-  animation-name: blink;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  animation-play-state: running;
 }
 #waypoint div {
   width: 100%;
