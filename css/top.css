@@ -9,8 +9,7 @@ body {
   font-size: 2vmax;
   min-height: 100%;
   margin: 0 auto;
-  padding: 5vmax 1vmax;
-  padding-top: 10vmax;
+  padding: 1vmax;
   background: #302833;
   color: white;
   display: flex;
@@ -23,6 +22,10 @@ header {
   width: 100%;
   top: 3vmax;
   left: 0;
+}
+header,
+footer {
+  pointer-events: none;
 }
 #loading {
   justify-content: center;
@@ -51,87 +54,77 @@ header {
   }
 }
 #menu {
+  padding-top: 10vmax;
   flex-grow: 1;
 }
 #menu ul {
   align-items: center;
   flex-grow: 4;
 }
-#item-container,
+#rows-container {
+  display: flex;
+  align-items: flex-start;
+}
+.item-container {
+  background: #302833;
+  flex-grow: 1;
+  width: 100%;
+}
+#rows-container,
 #zoom-container {
   display: flex;
-  flex-wrap: wrap;
 }
-#item-container .item,
+#rows-container .item,
 #zoom-container .item {
-  position: relative;
-  left: 0;
-  top: 0;
+  padding: 0.25vmax;
 }
-#item-container .item dl,
+#rows-container .item dl,
 #zoom-container .item dl {
-  width: 100%;
-  border-radius: 2px;
+  border-radius: 0.1vmin;
   background: white;
   color: #302833;
   margin: 0;
   display: flex;
   flex-direction: column;
 }
-#item-container .item dt,
+#rows-container .item dt,
 #zoom-container .item dt {
   padding: 0.5vmax;
   border-left: 2vmax solid #302833;
   font-size: 1.5vmax;
 }
-#item-container .item dd,
+#rows-container .item dd,
 #zoom-container .item dd {
   margin: 0;
   padding: 0.75vmax;
 }
-#item-container .item .link,
+#rows-container .item .link,
 #zoom-container .item .link {
   text-align: right;
 }
-#item-container .item .link a,
+#rows-container .item .link a,
 #zoom-container .item .link a {
   color: #b7282e;
   font-weight: 900;
   text-decoration: none;
 }
-@keyframes spread {
-  from {
-    height: 0;
-  }
-  to {
-    height: 100%;
-  }
-}
 .item-image {
-  flex-grow: 1;
+  padding: 3vmax 1vmax;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .item-image svg {
   width: 100%;
-  min-height: 10vmin;
-  max-height: 18vmin;
+  min-height: 5vmin;
 }
 #zoom-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   z-index: 1;
 }
 #zoom-container .item {
   width: 100%;
   padding: 0.25vmax;
-  animation-duration: 0.2s;
-  animation-name: spread;
-  animation-fill-mode: forwards;
 }
 #zoom-container .item dl {
   height: 100%;
@@ -150,95 +143,48 @@ header {
   height: 100%;
 }
 @media (max-width: 480px) {
-  #item-container .item {
-    width: 100%;
-    margin-bottom: 1vmax;
-  }
-  #item-container svg {
-    max-height: 50vmin;
-  }
 }
 @media (min-width: 480px) {
-  #item-container li {
-    width: 50%;
-    display: inline-flex;
-    padding: 0.5vmax;
-  }
-  #item-container .item dt {
-    font-size: 1.25vmax;
-  }
-  #item-container .link {
-    font-size: 1.25vmax;
-  }
 }
 @media (min-width: 640px) {
-  #item-container li {
-    width: 33.3%;
-  }
-  #item-container .item dt {
-    padding: 0.2vmax;
-    border-left-width: 1.2vmax;
-    font-size: 0.9vmax;
-  }
-  #item-container .link {
-    font-size: 1vmax;
-  }
-  #item-container .anime-blink,
-  #item-container #waypoint span {
-    font-size: 1.8vmin;
-  }
 }
 @media (min-width: 1024px) {
-  #item-container li {
-    width: 25%;
-  }
   .item-image .small {
     font-size: 2vmin;
   }
-}
-@media (min-width: 1280px) {
-  #item-container li {
-    width: 20%;
-  }
-  #item-container .item dt {
-    padding: 0.25vmax;
-    border-left-width: 1.25vmax;
-  }
-  #item-container .link {
-    font-size: 0.75vmax;
-  }
-  #item-container .anime-blink,
-  #item-container #waypoint span {
-    font-size: 1.25vmin;
-  }
-  .item-image .small {
+  #waypoint span {
     font-size: 1.8vmin;
   }
 }
+@media (min-width: 1280px) {
+  .item-image .small {
+    font-size: 1.8vmin;
+  }
+  #waypoint span {
+    font-size: 1.5vmin;
+  }
+}
 @media (min-width: 1920px) {
-  #item-container li {
-    width: 12.5%;
-  }
-  #item-container .anime-blink,
-  #item-container #waypoint span {
-    font-size: 0.8vmin;
-  }
   .item-image .small {
     font-size: 1.2vmin;
+  }
+  #waypoint span {
+    font-size: 1vmin;
   }
 }
 #waypoint {
   width: 100%;
+  padding: 0.25vmax;
   font-weight: 900;
 }
 #waypoint div {
   width: 100%;
-  padding: 1vmax;
+  padding: 1vmax 0;
   background: white;
   align-items: center;
   justify-content: center;
-  display: inline-flex;
-  border-radius: 2px;
+  display: flex;
+  border-radius: 0.1vmin;
 }
 #waypoint span {
   background: white;

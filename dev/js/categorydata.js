@@ -14,7 +14,6 @@ Categorydata.prototype.check = function() {
 }
 //
 Categorydata.prototype.addItem = function() {
-    console.log('add item');
     var parent = this;
     var waypointTop = $('#waypoint').offset().top;
     var scrollTop = $(document).scrollTop();
@@ -23,8 +22,10 @@ Categorydata.prototype.addItem = function() {
         this.loadItem()
             //次のアイテムがある場合はresolveが返ってきて、引き続きアイテム挿入を呼び出す
             .done(function() {
+                waypoint.move();
                 if (!parent.addItem()) {
                     scrollEvent.on(parent);
+                    console.log('addItem stop')
                 }
             })
             //次のアイテムがない場合はrejectが返ってきて終了
@@ -34,13 +35,12 @@ Categorydata.prototype.addItem = function() {
             });
         return true;
     } else {
-        console.log('addItem stop')
         return false;
     }
 }
 //
 Categorydata.prototype.loadItem = function() {
-    console.log('index : %d', this.index);
+    console.log('loadItem - index : %d', this.index);
     var tmp = this.getJSON();
     var dfd = $.Deferred();
     if (tmp) {
@@ -60,8 +60,8 @@ Categorydata.prototype.loadItem = function() {
         }).done(function(svg) {
             target
                 .html($(svg).find('svg'))
-                .on('click', function() {
-                    zoomEvent.on();
+                .on('click', function(e) {
+                    zoomEvent.on(e);
                     var svg = $(this).find('svg').clone();
                     createZoom(svg, tmp, item.json.dir);
                 });

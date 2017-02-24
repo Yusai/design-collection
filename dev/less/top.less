@@ -13,8 +13,7 @@ body {
     font-size: 2vmax;
     min-height: 100%;
     margin: 0 auto;
-    padding: 5vmax 1vmax;
-    padding-top: 10vmax;
+    padding: 1vmax;
     background: @black;
     color: white;
     .flex-column;
@@ -27,6 +26,10 @@ header {
     width: 100%;
     top: 3vmax;
     left: 0;
+}
+
+header, footer {
+    pointer-events: none;
 }
 
 #loading {
@@ -59,6 +62,7 @@ header {
 }
 
 #menu {
+    padding-top: 10vmax;
     flex-grow: 1;
     ul {
         align-items: center;
@@ -66,13 +70,25 @@ header {
     }
 }
 
-#item-container, #zoom-container {
+#rows-container {
     display: flex;
-    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.item-container {
+    background: @black;
+    flex-grow: 1;
+    width: 100%;
+}
+
+#rows-container, #zoom-container {
+    display: flex;
+    // flex-wrap: wrap;
     .item {
+        padding : 0.25vmax;
         dl {
-            width: 100%;
-            border-radius: 2px;
+            // width: 100%;
+            border-radius: 0.1vmin;
             background: white;
             color: @black;
             margin: 0;
@@ -95,47 +111,42 @@ header {
                 text-decoration: none;
             }
         }
-        position: relative;
-        left: 0;
-        top: 0;
     }
 }
 
-@keyframes spread {
-    from {
-        height: 0;
-    }
-    to {
-        height: 100%;
-    }
-}
+// @keyframes spread {
+//     from {
+//         transform: scale(0);
+//     }
+//     to {
+//         transform: scale(1);
+//     }
+// }
 
 .item-image {
-    // padding: 3vmax 1vmax;
-    flex-grow: 1;
+    padding: 3vmax 1vmax;
     display: flex;
     align-items: center;
     justify-content: center;
     svg {
         width: 100%;
-        min-height: 10vmin;
-        max-height: 18vmin;
+        min-height: 5vmin;
     }
 }
 
 #zoom-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    // top: 0;
+    // left: 0;
+    // width: 100%;
+    // height: 100%;
     z-index: 1;
     .item {
         width: 100%;
         padding: 0.25vmax;
-        animation-duration: 0.2s;
-        animation-name: spread;
-        animation-fill-mode: forwards;
+        // animation-duration: 0.2s;
+        // animation-name: spread;
+        // animation-fill-mode: forwards;
         dl {
             height: 100%;
             padding: 0.5vmax;
@@ -156,129 +167,145 @@ header {
 }
 
 @media (max-width: 480px) {
-    #item-container {
-        .item {
-            width: 100%;
-            margin-bottom: 1vmax;
-        }
-        svg {
-            max-height: 50vmin;
-        }
-    }
+    // #item-container {
+    //     .item {
+    //         width: 100%;
+    //         margin-bottom: 1vmax;
+    //     }
+    //     svg {
+    //         max-height: 50vmin;
+    //     }
+    // }
 }
 
 @media (min-width: 480px) {
-    #item-container {
-        li {
-            width: 50%;
-            display: inline-flex;
-            padding: 0.5vmax;
-        }
-        .item {
-            dt {
-                font-size: 1.25vmax;
-            }
-        }
-        .link {
-            font-size: 1.25vmax;
-        }
-    }
+    // #item-container {
+    //     li {
+    //         width: 50%;
+    //         display: inline-flex;
+    //         padding: 0.5vmax;
+    //     }
+    //     .item {
+    //         dt {
+    //             font-size: 1.25vmax;
+    //         }
+    //     }
+    //     .link {
+    //         font-size: 1.25vmax;
+    //     }
+    // }
 }
 
 @media (min-width: 640px) {
-    #item-container {
-        li {
-            width: 33.3%;
-        }
-        svg {
-            // max-height: 7vmin;
-        }
-        .item {
-            dt {
-                padding: 0.2vmax;
-                border-left-width: 1.2vmax;
-                font-size: 0.9vmax;
-            }
-        }
-        .link {
-            font-size: 1vmax;
-        }
-        .anime-blink, #waypoint span {
-            font-size: 1.8vmin;
-        }
-    }
+    // #item-container {
+    //     li {
+    //         width: 33.3%;
+    //     }
+    //     svg {
+    //         // max-height: 7vmin;
+    //     }
+    //     .item {
+    //         dt {
+    //             padding: 0.2vmax;
+    //             border-left-width: 1.2vmax;
+    //             font-size: 0.9vmax;
+    //         }
+    //     }
+    //     .link {
+    //         font-size: 1vmax;
+    //     }
+    //     .anime-blink, #waypoint span {
+    //         font-size: 1.8vmin;
+    //     }
+    // }
 }
 
 @media (min-width: 1024px) {
-    #item-container {
-        li {
-            width: 25%;
-        }
-    }
+    // #item-container {
+    //     li {
+    //         width: 25%;
+    //     }
+    // }
     .item-image {
         .small {
             font-size: 2vmin;
         }
     }
-}
-
-@media (min-width: 1280px) {
-    #item-container {
-        li {
-            width: 20%;
-        }
-        .item {
-            dt {
-                padding: 0.25vmax;
-                border-left-width: 1.25vmax;
-            }
-        }
-        .link {
-            font-size: 0.75vmax;
-        }
-        .anime-blink, #waypoint span {
-            font-size: 1.25vmin;
-        }
-    }
-    .item-image {
-        .small {
+    #waypoint {
+        span {
             font-size: 1.8vmin;
         }
     }
 }
 
-@media (min-width: 1920px) {
-    #item-container {
-        li {
-            width: 12.5%;
-        }
-        svg {
-            // max-height: 5vmax;
-            // min-height: auto;
-        }
-        .anime-blink, #waypoint span {
-            font-size: 0.8vmin;
+@media (min-width: 1280px) {
+    // #item-container {
+    //     li {
+    //         width: 20%;
+    //     }
+    //     .item {
+    //         dt {
+    //             padding: 0.25vmax;
+    //             border-left-width: 1.25vmax;
+    //         }
+    //     }
+    //     .link {
+    //         font-size: 0.75vmax;
+    //     }
+    //     .anime-blink, #waypoint span {
+    //         font-size: 1.25vmin;
+    //     }
+    // }
+    .item-image {
+        .small {
+            font-size: 1.8vmin;
         }
     }
+    #waypoint {
+        span {
+            font-size: 1.5vmin;
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    // #item-container {
+    //     li {
+    //         width: 12.5%;
+    //     }
+    //     svg {
+    //         // max-height: 5vmax;
+    //         // min-height: auto;
+    //     }
+    //     .anime-blink, #waypoint span {
+    //         font-size: 0.8vmin;
+    //     }
+    // }
     .item-image {
         .small {
             font-size: 1.2vmin;
+        }
+    }
+    #waypoint {
+        span {
+            font-size: 1vmin;
         }
     }
 }
 
 #waypoint {
     width: 100%;
+    padding: 0.25vmax;
     .bold9;
 //    .anime-blink;
     div {
         width: 100%;
-        padding: 1vmax;
+        padding: 1vmax 0;
         background: white;
         align-items: center;
         justify-content: center;
-        display: inline-flex;
-        border-radius: 2px;
+        display: flex;
+        border-radius: 0.1vmin;
     }
     span {
         background: white;

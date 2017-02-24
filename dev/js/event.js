@@ -1,41 +1,54 @@
 //
 var waypoint = {
     on: function() {
-        $('#item-container').append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
+        $('#rows-container').children().eq(this.calc())
+            .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
     },
     off: function() {
         $('#waypoint').fadeOut(250, function() {
             $(this).remove();
         });
+        // $('#waypoint').show();
+    },
+    calc : function() {
+        var heightList = [];
+        $('#rows-container').children().each(function(){
+            heightList.push($(this).height());
+        });
+        return heightList.indexOf(Math.min.apply(null, heightList));
+    },
+    move : function() {
+        $('#waypoint').appendTo($('#rows-container').children().eq(this.calc()));
     }
 };
 //
 var scrollEvent = {
     on: function(tmp) {
-        console.log('scroll on')
-        $(window).on('scroll orientationchange', function() {
-            console.log('scroll')
+        $(window).on('scroll', function() {
             tmp.addItem();
         });
     },
     off: function() {
-        console.log('scroll off')
-        $(window).off('scroll orientationchange');
+        $(window).off('scroll');
     }
 };
 //
 var zoomEvent = {
     scrollTop: 0,
-    on: function() {
+    on: function(e) {
         this.scrollTop = $(document).scrollTop();
+        var x = e.pageX;
+        var y = e.pageY - this.scrollTop;
+        $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
     },
     off: function() {
+        $('#rows-container, #close').fadeIn(250);
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
 //
 function createZoom(svg, data, dir) {
-    $('#item-container, #close').fadeOut(100, function() {
+    $('#rows-container, #close').fadeOut(100, function() {
         $('#zoom-container').find('.item-image')
             .html(svg);
         $('#zoom-container').find('.link')
@@ -48,6 +61,15 @@ function createZoom(svg, data, dir) {
                 'href' : 'svg/' + dir + '/' + data.svg + '.svg',
                 'download' : data.svg + '.svg'
             });
-        $('#zoom-container').fadeIn(100);
+        $('#zoom-container').show().animate({
+            left: "0",
+            top: "0",
+            width: '100%',
+            height: '100%'
+        }, 100);
     });
 }
+
+$(window).on('orientationchange', function() {
+    globalData.setIndex(globalData.getIndex());
+});

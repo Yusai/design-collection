@@ -14,7 +14,6 @@ Categorydata.prototype.check = function() {
 }
 //
 Categorydata.prototype.addItem = function() {
-    console.log('add item');
     var parent = this;
     var waypointTop = $('#waypoint').offset().top;
     var scrollTop = $(document).scrollTop();
@@ -23,8 +22,10 @@ Categorydata.prototype.addItem = function() {
         this.loadItem()
             //次のアイテムがある場合はresolveが返ってきて、引き続きアイテム挿入を呼び出す
             .done(function() {
+                waypoint.move();
                 if (!parent.addItem()) {
                     scrollEvent.on(parent);
+                    console.log('addItem stop')
                 }
             })
             //次のアイテムがない場合はrejectが返ってきて終了
@@ -34,13 +35,12 @@ Categorydata.prototype.addItem = function() {
             });
         return true;
     } else {
-        console.log('addItem stop')
         return false;
     }
 }
 //
 Categorydata.prototype.loadItem = function() {
-    console.log('index : %d', this.index);
+    console.log('loadItem - index : %d', this.index);
     var tmp = this.getJSON();
     var dfd = $.Deferred();
     if (tmp) {
@@ -60,8 +60,8 @@ Categorydata.prototype.loadItem = function() {
         }).done(function(svg) {
             target
                 .html($(svg).find('svg'))
-                .on('click', function() {
-                    zoomEvent.on();
+                .on('click', function(e) {
+                    zoomEvent.on(e);
                     var svg = $(this).find('svg').clone();
                     createZoom(svg, tmp, item.json.dir);
                 });
@@ -113,41 +113,54 @@ Categorydata.prototype.getJSON = function() {
 //
 var waypoint = {
     on: function() {
-        $('#item-container').append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
+        $('#rows-container').children().eq(this.calc())
+            .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
     },
     off: function() {
         $('#waypoint').fadeOut(250, function() {
             $(this).remove();
         });
+        // $('#waypoint').show();
+    },
+    calc : function() {
+        var heightList = [];
+        $('#rows-container').children().each(function(){
+            heightList.push($(this).height());
+        });
+        return heightList.indexOf(Math.min.apply(null, heightList));
+    },
+    move : function() {
+        $('#waypoint').appendTo($('#rows-container').children().eq(this.calc()));
     }
 };
 //
 var scrollEvent = {
     on: function(tmp) {
-        console.log('scroll on')
-        $(window).on('scroll orientationchange', function() {
-            console.log('scroll')
+        $(window).on('scroll', function() {
             tmp.addItem();
         });
     },
     off: function() {
-        console.log('scroll off')
-        $(window).off('scroll orientationchange');
+        $(window).off('scroll');
     }
 };
 //
 var zoomEvent = {
     scrollTop: 0,
-    on: function() {
+    on: function(e) {
         this.scrollTop = $(document).scrollTop();
+        var x = e.pageX;
+        var y = e.pageY - this.scrollTop;
+        $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
     },
     off: function() {
+        $('#rows-container, #close').fadeIn(250);
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
 //
 function createZoom(svg, data, dir) {
-    $('#item-container, #close').fadeOut(100, function() {
+    $('#rows-container, #close').fadeOut(100, function() {
         $('#zoom-container').find('.item-image')
             .html(svg);
         $('#zoom-container').find('.link')
@@ -160,17 +173,43 @@ function createZoom(svg, data, dir) {
                 'href' : 'svg/' + dir + '/' + data.svg + '.svg',
                 'download' : data.svg + '.svg'
             });
-        $('#zoom-container').fadeIn(100);
+        $('#zoom-container').show().animate({
+            left: "0",
+            top: "0",
+            width: '100%',
+            height: '100%'
+        }, 100);
     });
 }
 
+$(window).on('orientationchange', function() {
+    globalData.setIndex(globalData.getIndex());
+});
 //
 var globalData = {
     index : 0,
     data: [],
+    rows: 0,
     setIndex : function(index) {
+        $('#rows-container').children().remove();
+        $("#main").fadeIn(250);
         this.index = index;
+        this.setRows();
         this.data[this.index].select();
+    },
+    getIndex : function() {
+        return this.index;
+    },
+    setRows : function() {
+        var rows = Math.floor($('html').width() / 180);
+        if (rows == 0) {
+            rows = 1;
+        }
+        this.rows = rows;
+        //
+        for (var i = 0; i < this.rows; i++) {
+            $('#rows-container').append('<ul class="item-container"></ul>');
+        }
     }
 };
 //
@@ -196,9 +235,7 @@ $('#menu .button').each(function(index) {
         $('h1').fadeOut(250);
         $("#menu").fadeOut(250, function() {
             $('h1').addClass('small').fadeIn(250);
-            $("#main").fadeIn(250, function() {
-                globalData.setIndex(index);
-            });
+            globalData.setIndex(index);
         });
     });
 });
@@ -208,14 +245,13 @@ $('#close').on('click', function() {
         $('#waypoint').hide();
         $("#menu").fadeIn(250);
         $('h1').removeClass('small');
-        $('#item-container').html("");
     });
 });
 //
 $('#zoom-container .item-image').on('click', function() {
-    zoomEvent.off();
-    $('#item-container, #close').fadeIn(250);
-    $('#zoom-container').fadeOut(250);
+    $('#zoom-container').fadeOut(100, function() {
+        zoomEvent.off();
+    });
 });
 //
 function start() {
