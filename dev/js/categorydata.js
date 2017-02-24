@@ -1,28 +1,19 @@
 //
 function Categorydata(json) {
-    this.index = 0;
     this.json = json;
 }
-
+//
 Categorydata.prototype.select = function() {
-    console.log(this.json)
     this.index = 0;
     waypoint.on();
     this.addItem();
-    // scrollEvent.on(this);
 }
-
+//
 Categorydata.prototype.check = function() {
      return (this.index < this.json.json.length);
 }
-
+//
 Categorydata.prototype.addItem = function() {
-    // if (!this.check()) {
-    //     console.log('item loaded')
-    //     waypoint.off();
-    //     scrollEvent.off();
-    //     return false;
-    // }
     console.log('add item');
     var parent = this;
     var waypointTop = $('#waypoint').offset().top;
@@ -47,26 +38,21 @@ Categorydata.prototype.addItem = function() {
         return false;
     }
 }
-
+//
 Categorydata.prototype.loadItem = function() {
     console.log('index : %d', this.index);
     var tmp = this.getJSON();
     var dfd = $.Deferred();
     if (tmp) {
         var item = this;
-        var dl = $("<dl class='small'></dl>");
+        var dl = $("<dl class='small'></dl>")
+            .attr({
+                title: tmp.title,
+                source_url : tmp.url
+            });
         var target = $("<dd class='item-image'></dd>")
         var li = $("<li class='item' style='display:none;'></li>");
-        $('#waypoint').before(
-            li.append(
-               dl
-                    .append(target)
-                    .attr({
-                        title: tmp.title,
-                        source_url : tmp.url
-                    })
-            )
-        );
+        $('#waypoint').before(li.append(dl.append(target)));
         $.ajax({
             type: 'get',
             url: 'svg/' + item.json.dir + '/' + tmp.svg + '.svg',
@@ -96,7 +82,7 @@ Categorydata.prototype.loadItem = function() {
         return dfd.reject();
     }
 }
-
+//
 Categorydata.prototype.showItem = function(li) {
     var dfd = $.Deferred();
     var item = this;
@@ -113,7 +99,7 @@ Categorydata.prototype.showItem = function(li) {
     });
     return dfd;
 }
-
+//
 Categorydata.prototype.getJSON = function() {
     if (this.check()) {
         var tmp = this.json.json[this.index];

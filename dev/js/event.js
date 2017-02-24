@@ -1,3 +1,4 @@
+//
 var waypoint = {
     on: function() {
         $('#item-container').append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
@@ -8,7 +9,7 @@ var waypoint = {
         });
     }
 };
-
+//
 var scrollEvent = {
     on: function(tmp) {
         console.log('scroll on')
@@ -22,7 +23,7 @@ var scrollEvent = {
         $(window).off('scroll orientationchange');
     }
 };
-
+//
 var zoomEvent = {
     scrollTop: 0,
     on: function() {
@@ -32,7 +33,7 @@ var zoomEvent = {
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
-
+//
 function createZoom(svg, data, dir) {
     $('#item-container, #close').fadeOut(100, function() {
         $('#zoom-container').find('.item-image')

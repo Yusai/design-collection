@@ -1,28 +1,19 @@
 //
 function Categorydata(json) {
-    this.index = 0;
     this.json = json;
 }
-
+//
 Categorydata.prototype.select = function() {
-    console.log(this.json)
     this.index = 0;
     waypoint.on();
     this.addItem();
-    // scrollEvent.on(this);
 }
-
+//
 Categorydata.prototype.check = function() {
      return (this.index < this.json.json.length);
 }
-
+//
 Categorydata.prototype.addItem = function() {
-    // if (!this.check()) {
-    //     console.log('item loaded')
-    //     waypoint.off();
-    //     scrollEvent.off();
-    //     return false;
-    // }
     console.log('add item');
     var parent = this;
     var waypointTop = $('#waypoint').offset().top;
@@ -47,26 +38,21 @@ Categorydata.prototype.addItem = function() {
         return false;
     }
 }
-
+//
 Categorydata.prototype.loadItem = function() {
     console.log('index : %d', this.index);
     var tmp = this.getJSON();
     var dfd = $.Deferred();
     if (tmp) {
         var item = this;
-        var dl = $("<dl class='small'></dl>");
+        var dl = $("<dl class='small'></dl>")
+            .attr({
+                title: tmp.title,
+                source_url : tmp.url
+            });
         var target = $("<dd class='item-image'></dd>")
         var li = $("<li class='item' style='display:none;'></li>");
-        $('#waypoint').before(
-            li.append(
-               dl
-                    .append(target)
-                    .attr({
-                        title: tmp.title,
-                        source_url : tmp.url
-                    })
-            )
-        );
+        $('#waypoint').before(li.append(dl.append(target)));
         $.ajax({
             type: 'get',
             url: 'svg/' + item.json.dir + '/' + tmp.svg + '.svg',
@@ -96,7 +82,7 @@ Categorydata.prototype.loadItem = function() {
         return dfd.reject();
     }
 }
-
+//
 Categorydata.prototype.showItem = function(li) {
     var dfd = $.Deferred();
     var item = this;
@@ -113,7 +99,7 @@ Categorydata.prototype.showItem = function(li) {
     });
     return dfd;
 }
-
+//
 Categorydata.prototype.getJSON = function() {
     if (this.check()) {
         var tmp = this.json.json[this.index];
@@ -124,6 +110,7 @@ Categorydata.prototype.getJSON = function() {
     return tmp;
 }
 
+//
 var waypoint = {
     on: function() {
         $('#item-container').append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
@@ -134,7 +121,7 @@ var waypoint = {
         });
     }
 };
-
+//
 var scrollEvent = {
     on: function(tmp) {
         console.log('scroll on')
@@ -148,7 +135,7 @@ var scrollEvent = {
         $(window).off('scroll orientationchange');
     }
 };
-
+//
 var zoomEvent = {
     scrollTop: 0,
     on: function() {
@@ -158,7 +145,7 @@ var zoomEvent = {
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
-
+//
 function createZoom(svg, data, dir) {
     $('#item-container, #close').fadeOut(100, function() {
         $('#zoom-container').find('.item-image')
@@ -176,68 +163,6 @@ function createZoom(svg, data, dir) {
         $('#zoom-container').fadeIn(100);
     });
 }
-//
-// function SingleData(json) {
-//     this.dir = json.dir;
-//     this.json = json.json;
-//     this.index = 0;
-// }
-// SingleData.prototype.getJSON = function() {
-//     if (this.check()) {
-//         var tmp = this.json[this.index];
-//         this.index ++;
-//     } else {
-//         var tmp = false;
-//     }
-//     return tmp;
-// }
-// SingleData.prototype.resetIndex = function() {
-//     this.index = 0;
-// }
-// SingleData.prototype.check = function() {
-//     return (this.index < this.json.length);
-// }
-//
-// function loadJson(file) {
-//     var dfd = $.Deferred();
-//     $.getJSON("json/" + file + ".json", function(json) {
-//         data.push(new SingleData(json));
-//         dfd.resolve();
-//     });
-//     return dfd.promise();
-// }
-//
-// new (function(fileList) {
-//     //
-//     this.index = 0;
-//     this.data = [];
-//     //
-//     var global = this;
-//     //
-//     var dfds = [];
-//     fileList.forEach(function(file, num) {
-//         var dfd = $.Deferred();
-//         $.getJSON("json/" + file + ".json", function(json) {
-//             global.data[num] = {
-//                 index : 0,
-//                 json : json
-//             };
-//             dfd.resolve();
-//         });        
-//         dfds.push(dfd.promise());
-//     });
-//     $.when.apply($, dfds).then(function() {
-//         console.log(global);
-//         start();
-//     });
-//     //
-//     $("#menu .button").click(function() {
-//         selectMenu(this)
-//             .done(function(index) {
-//                 selectJSON(index);
-//             });
-//     });
-// })(['by-pioneer', 'traced-a-photo']);
 
 //
 var globalData = {
@@ -265,62 +190,19 @@ var globalData = {
     });
 })(['by-pioneer', 'traced-a-photo']);
 
-// var json_data = (function() {
-//     var data = [];
-//     function loadJSON(files) {
-//         if (files.length == 0) {
-//             $("#loading").fadeToggle(250, function(){
-//                 $("#menu").fadeToggle(250);
-//             });
-//         } else {
-//             var file = files.pop();
-//             $.getJSON("json/" + file + ".json", function(json) {
-//                 data.push(new SingleData(json));
-//                 loadJSON(files);
-//             });
-//         }
-//         return data;
-//     }
-//     return loadJSON(['traced-a-photo', 'by-pioneer']);
-// })();
-// $("#menu .button").click(function() {
-//     var index = $("#menu .button").index(this);
-//     $("#menu").fadeOut(250, function() {
-//         $('h1').addClass('small');
-//         $("#main").fadeIn(250, function() {
-//             $('#waypoint').show();
-//             selectJSON(index);
-//         });
-//     });
-// });
 //
-// $("#menu .button").on('click', function() {
-//     var index = $('#menu .button').index(this);
-//     //
-//     $("#menu, h1").fadeOut(250, function() {
-//         $('h1').addClass('small');
-//         $("#main, h1").fadeIn(250, function() {
-// //            $('#waypoint').show();
-//             // selectJSON();
-//             console.log('click')
-//             globalData.setIndex(index);
-//         });
-//     });
-// });
 $('#menu .button').each(function(index) {
     $(this).on('click', function() {
         $('h1').fadeOut(250);
         $("#menu").fadeOut(250, function() {
             $('h1').addClass('small').fadeIn(250);
             $("#main").fadeIn(250, function() {
-    //            $('#waypoint').show();
-                // selectJSON();
                 globalData.setIndex(index);
             });
         });
     });
 });
-
+//
 $('#close').on('click', function() {
     $("#main").fadeOut(250, function() {
         $('#waypoint').hide();
@@ -329,13 +211,13 @@ $('#close').on('click', function() {
         $('#item-container').html("");
     });
 });
-
+//
 $('#zoom-container .item-image').on('click', function() {
     zoomEvent.off();
     $('#item-container, #close').fadeIn(250);
     $('#zoom-container').fadeOut(250);
 });
-
+//
 function start() {
     $("#loading").fadeToggle(250, function(){
         $("#menu").fadeToggle(250);
