@@ -14,7 +14,7 @@ var globalData = {
         return this.index;
     },
     setRows : function() {
-        var rows = Math.floor($('html').width() / 180);
+        var rows = Math.floor($('html').width() / 160);
         if (rows == 0) {
             rows = 1;
         }

@@ -14,7 +14,7 @@ Categorydata.prototype.check = function() {
 }
 //
 Categorydata.prototype.addItem = function() {
-    var parent = this;
+    var _this = this;
     var waypointTop = $('#waypoint').offset().top;
     var scrollTop = $(document).scrollTop();
     if ((waypointTop - scrollTop + 12) < $(window).height()) {
@@ -23,8 +23,8 @@ Categorydata.prototype.addItem = function() {
             //次のアイテムがある場合はresolveが返ってきて、引き続きアイテム挿入を呼び出す
             .done(function() {
                 waypoint.move();
-                if (!parent.addItem()) {
-                    scrollEvent.on(parent);
+                if (!_this.addItem()) {
+                    scrollEvent.on(_this);
                     console.log('addItem stop')
                 }
             })
@@ -43,6 +43,8 @@ Categorydata.prototype.loadItem = function() {
     console.log('loadItem - index : %d', this.index);
     var tmp = this.getJSON();
     var dfd = $.Deferred();
+    //
+    //
     if (tmp) {
         var item = this;
         var dl = $("<dl class='small'></dl>")
@@ -53,22 +55,21 @@ Categorydata.prototype.loadItem = function() {
         var target = $("<dd class='item-image'></dd>")
         var li = $("<li class='item' style='display:none;'></li>");
         $('#waypoint').before(li.append(dl.append(target)));
-        $.ajax({
-            type: 'get',
-            url: 'svg/' + item.json.dir + '/' + tmp.svg + '.svg',
-            dataType: 'xml',
-        }).done(function(svg) {
-            target
-                .html($(svg).find('svg'))
-                .on('click', function(e) {
-                    zoomEvent.on(e);
-                    var svg = $(this).find('svg').clone();
-                    createZoom(svg, tmp, item.json.dir);
-                });
-        }).fail(function() {
-            console.log('File Not Found...')
-            target.html('<span class="bold9 small">Image Not Found.</span>');
-        }).always(function(){
+        //
+        function appendSVG() {
+            if (tmp.data != 'image not found') {
+                target
+                    // .html($(svg).find('svg'))
+                    .html(tmp.data)
+                    .on('click', function(e) {
+                        zoomEvent.on(e);
+                        // var svg = $(this).find('svg').clone();
+                        createZoom(tmp, item.json.dir);
+                    });
+            } else {
+                target.html('<span class="bold9 small">Not Found.</span>');
+            }
+            //
             item.showItem(li)
                 .done(function() {
                     dfd.resolve();
@@ -76,7 +77,26 @@ Categorydata.prototype.loadItem = function() {
                 .fail(function() {
                     dfd.reject();
                 });
-        });
+        }
+        //
+        if (tmp.data) {
+            appendSVG();
+        } else {
+            $.ajax({
+                type: 'get',
+                url: 'svg/' + item.json.dir + '/' + tmp.svg + '.svg'//,
+                // dataType: 'xml',
+            }).done(function(svg) {
+                // tmp.data = $(svg).find('svg')[0];
+                tmp.data = $('<div></div>').append($(svg).find('svg')).html();
+                appendSVG();
+            }).fail(function() {
+                console.log('File Not Found...')
+                tmp.data = 'image not found';
+                appendSVG();
+            }).always(function(){
+            });
+        }
         return dfd.promise();
     } else {
         return dfd.reject();
@@ -86,17 +106,17 @@ Categorydata.prototype.loadItem = function() {
 Categorydata.prototype.showItem = function(li) {
     var dfd = $.Deferred();
     var item = this;
-    var duration = 5;
-    $('#waypoint').fadeOut(duration, function() {
+    var duration = 1;
+    // $('#waypoint').fadeOut(duration, function() {
         li.fadeIn(duration);
         if (item.check()) {
-            $('#waypoint').fadeIn(duration, function() {
+            // $('#waypoint').fadeIn(duration, function() {
                 dfd.resolve();
-            });
+            // });
         } else {
             dfd.reject();
         }
-    });
+    // });
     return dfd;
 }
 //
@@ -117,10 +137,11 @@ var waypoint = {
             .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
     },
     off: function() {
-        $('#waypoint').fadeOut(250, function() {
-            $(this).remove();
-        });
+        // $('#waypoint').fadeOut(250, function() {
+            // $(this).remove();
+        // });
         // $('#waypoint').show();
+        $('#waypoint').remove();
     },
     calc : function() {
         var heightList = [];
@@ -154,15 +175,15 @@ var zoomEvent = {
         $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
     },
     off: function() {
-        $('#rows-container, #close').fadeIn(250);
+        // $('#rows-container, #close').fadeIn(250);
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
 //
-function createZoom(svg, data, dir) {
-    $('#rows-container, #close').fadeOut(100, function() {
+function createZoom(data, dir) {
+    // $('#rows-container, #close').fadeOut(100, function() {
         $('#zoom-container').find('.item-image')
-            .html(svg);
+            .html(data.data);
         $('#zoom-container').find('.link')
             .html("<a href='//goo.gl/" + data.url + "' target='_blank'>" + data.title + "</a>");
         // var serializer = new XMLSerializer();
@@ -179,11 +200,14 @@ function createZoom(svg, data, dir) {
             width: '100%',
             height: '100%'
         }, 100);
-    });
+    // });
 }
 
 $(window).on('orientationchange', function() {
-    globalData.setIndex(globalData.getIndex());
+    if ($('#main:visible').length) {
+        console.log('orient')
+        globalData.setIndex(globalData.getIndex());
+    }
 });
 //
 var globalData = {
@@ -201,7 +225,7 @@ var globalData = {
         return this.index;
     },
     setRows : function() {
-        var rows = Math.floor($('html').width() / 180);
+        var rows = Math.floor($('html').width() / 160);
         if (rows == 0) {
             rows = 1;
         }

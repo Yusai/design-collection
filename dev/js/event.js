@@ -5,10 +5,11 @@ var waypoint = {
             .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
     },
     off: function() {
-        $('#waypoint').fadeOut(250, function() {
-            $(this).remove();
-        });
+        // $('#waypoint').fadeOut(250, function() {
+            // $(this).remove();
+        // });
         // $('#waypoint').show();
+        $('#waypoint').remove();
     },
     calc : function() {
         var heightList = [];
@@ -42,15 +43,15 @@ var zoomEvent = {
         $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
     },
     off: function() {
-        $('#rows-container, #close').fadeIn(250);
+        // $('#rows-container, #close').fadeIn(250);
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
 //
-function createZoom(svg, data, dir) {
-    $('#rows-container, #close').fadeOut(100, function() {
+function createZoom(data, dir) {
+    // $('#rows-container, #close').fadeOut(100, function() {
         $('#zoom-container').find('.item-image')
-            .html(svg);
+            .html(data.data);
         $('#zoom-container').find('.link')
             .html("<a href='//goo.gl/" + data.url + "' target='_blank'>" + data.title + "</a>");
         // var serializer = new XMLSerializer();
@@ -67,9 +68,12 @@ function createZoom(svg, data, dir) {
             width: '100%',
             height: '100%'
         }, 100);
-    });
+    // });
 }
 
 $(window).on('orientationchange', function() {
-    globalData.setIndex(globalData.getIndex());
+    if ($('#main:visible').length) {
+        console.log('orient')
+        globalData.setIndex(globalData.getIndex());
+    }
 });

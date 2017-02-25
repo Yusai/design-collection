@@ -3,6 +3,7 @@
 }
 html {
   height: 100%;
+  overflow-y: scroll;
 }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
@@ -20,7 +21,6 @@ header {
   text-shadow: 0px 0px 1px #302833;
   z-index: 1;
   width: 100%;
-  top: 3vmax;
   left: 0;
 }
 header,
@@ -116,11 +116,12 @@ footer {
 }
 .item-image svg {
   width: 100%;
-  min-height: 5vmin;
+  max-height: 80px;
+  min-height: 40px;
 }
 #zoom-container {
   position: fixed;
-  z-index: 1;
+  z-index: 2;
 }
 #zoom-container .item {
   width: 100%;
@@ -143,33 +144,32 @@ footer {
   height: 100%;
 }
 @media (max-width: 480px) {
-}
-@media (min-width: 480px) {
-}
-@media (min-width: 640px) {
+  body {
+    padding: 0;
+  }
 }
 @media (min-width: 1024px) {
   .item-image .small {
-    font-size: 2vmin;
-  }
-  #waypoint span {
-    font-size: 1.8vmin;
-  }
-}
-@media (min-width: 1280px) {
-  .item-image .small {
-    font-size: 1.8vmin;
+    font-size: 1.5vmin;
   }
   #waypoint span {
     font-size: 1.5vmin;
   }
 }
-@media (min-width: 1920px) {
+@media (min-width: 1280px) {
   .item-image .small {
-    font-size: 1.2vmin;
+    font-size: 1.25vmin;
   }
   #waypoint span {
-    font-size: 1vmin;
+    font-size: 1.25vmin;
+  }
+}
+@media (min-width: 1920px) {
+  .item-image .small {
+    font-size: 0.9vmin;
+  }
+  #waypoint span {
+    font-size: 0.9vmin;
   }
 }
 #waypoint {
@@ -213,6 +213,10 @@ h1 {
   text-align: center;
   font-size: 4.5vmax;
   margin: 0;
+  margin-top: 3vmax;
+}
+h1.small {
+  margin-top: 0vmax;
 }
 h2 {
   margin: 1vmax 0;
@@ -263,7 +267,7 @@ ul {
 #close {
   font-size: 2.5vmax;
   position: fixed;
-  z-index: 2;
+  z-index: 1;
   top: 4px;
   right: 4px;
   background: white;

@@ -6,6 +6,7 @@
 
 html {
     height: 100%;
+    overflow-y: scroll;
 }
 
 body {
@@ -24,7 +25,6 @@ header {
     text-shadow: 0px 0px 1px @black;
     z-index: 1;
     width: 100%;
-    top: 3vmax;
     left: 0;
 }
 
@@ -123,6 +123,7 @@ header, footer {
 //     }
 // }
 
+@block-width : 160px;
 .item-image {
     padding: 3vmax 1vmax;
     display: flex;
@@ -130,7 +131,8 @@ header, footer {
     justify-content: center;
     svg {
         width: 100%;
-        min-height: 5vmin;
+        max-height: @block-width / 2;
+        min-height: @block-width / 4;//5vmin;
     }
 }
 
@@ -140,7 +142,7 @@ header, footer {
     // left: 0;
     // width: 100%;
     // height: 100%;
-    z-index: 1;
+    z-index: 2;
     .item {
         width: 100%;
         padding: 0.25vmax;
@@ -167,98 +169,21 @@ header, footer {
 }
 
 @media (max-width: 480px) {
-    // #item-container {
-    //     .item {
-    //         width: 100%;
-    //         margin-bottom: 1vmax;
-    //     }
-    //     svg {
-    //         max-height: 50vmin;
-    //     }
-    // }
+    body {
+        padding: 0;
+    }
 }
 
 @media (min-width: 480px) {
-    // #item-container {
-    //     li {
-    //         width: 50%;
-    //         display: inline-flex;
-    //         padding: 0.5vmax;
-    //     }
-    //     .item {
-    //         dt {
-    //             font-size: 1.25vmax;
-    //         }
-    //     }
-    //     .link {
-    //         font-size: 1.25vmax;
-    //     }
-    // }
 }
 
 @media (min-width: 640px) {
-    // #item-container {
-    //     li {
-    //         width: 33.3%;
-    //     }
-    //     svg {
-    //         // max-height: 7vmin;
-    //     }
-    //     .item {
-    //         dt {
-    //             padding: 0.2vmax;
-    //             border-left-width: 1.2vmax;
-    //             font-size: 0.9vmax;
-    //         }
-    //     }
-    //     .link {
-    //         font-size: 1vmax;
-    //     }
-    //     .anime-blink, #waypoint span {
-    //         font-size: 1.8vmin;
-    //     }
-    // }
 }
 
 @media (min-width: 1024px) {
-    // #item-container {
-    //     li {
-    //         width: 25%;
-    //     }
-    // }
     .item-image {
         .small {
-            font-size: 2vmin;
-        }
-    }
-    #waypoint {
-        span {
-            font-size: 1.8vmin;
-        }
-    }
-}
-
-@media (min-width: 1280px) {
-    // #item-container {
-    //     li {
-    //         width: 20%;
-    //     }
-    //     .item {
-    //         dt {
-    //             padding: 0.25vmax;
-    //             border-left-width: 1.25vmax;
-    //         }
-    //     }
-    //     .link {
-    //         font-size: 0.75vmax;
-    //     }
-    //     .anime-blink, #waypoint span {
-    //         font-size: 1.25vmin;
-    //     }
-    // }
-    .item-image {
-        .small {
-            font-size: 1.8vmin;
+            font-size: 1.5vmin;
         }
     }
     #waypoint {
@@ -268,27 +193,28 @@ header, footer {
     }
 }
 
-@media (min-width: 1920px) {
-    // #item-container {
-    //     li {
-    //         width: 12.5%;
-    //     }
-    //     svg {
-    //         // max-height: 5vmax;
-    //         // min-height: auto;
-    //     }
-    //     .anime-blink, #waypoint span {
-    //         font-size: 0.8vmin;
-    //     }
-    // }
+@media (min-width: 1280px) {
     .item-image {
         .small {
-            font-size: 1.2vmin;
+            font-size: 1.25vmin;
         }
     }
     #waypoint {
         span {
-            font-size: 1vmin;
+            font-size: 1.25vmin;
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    .item-image {
+        .small {
+            font-size: 0.9vmin;
+        }
+    }
+    #waypoint {
+        span {
+            font-size: 0.9vmin;
         }
     }
 }
@@ -338,6 +264,10 @@ h1 {
     .center;
     font-size: 4.5vmax;
     margin: 0;
+    margin-top: 3vmax;
+    &.small {
+        margin-top: 0vmax;
+    }
 }
 
 h2 {
@@ -399,7 +329,7 @@ ul {
 #close {
     font-size: 2.5vmax;
     position: fixed;
-    z-index: 2;
+    z-index: 1;
     top: 4px;
     right: 4px;
     background: white;
