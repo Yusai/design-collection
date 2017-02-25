@@ -1,7 +1,7 @@
 //
 $('#close').on('click', function() {
+    $('#waypoint').hide();
     $("#main").fadeOut(250, function() {
-        $('#waypoint').hide();
         $("#menu").fadeIn(250);
         $('h1').removeClass('small');
     });

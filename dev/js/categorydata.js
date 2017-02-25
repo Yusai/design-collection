@@ -14,6 +14,11 @@ Categorydata.prototype.check = function() {
 }
 //
 Categorydata.prototype.addItem = function() {
+    //メニューに戻った場合、読み込み中断
+    if (!$('#waypoint:visible').length) {
+        return false;
+    }
+    //
     var _this = this;
     var waypointTop = $('#waypoint').offset().top;
     var scrollTop = $(document).scrollTop();
@@ -23,6 +28,7 @@ Categorydata.prototype.addItem = function() {
             //次のアイテムがある場合はresolveが返ってきて、引き続きアイテム挿入を呼び出す
             .done(function() {
                 waypoint.move();
+                //画面下まで到達または閉じるボタンが押された場合読み込み中断
                 if (!_this.addItem()) {
                     scrollEvent.on(_this);
                     console.log('addItem stop')
