@@ -44,13 +44,12 @@ Categorydata.prototype.loadItem = function() {
     var tmp = this.getJSON();
     var dfd = $.Deferred();
     //
-    //
     if (tmp) {
         var item = this;
         var dl = $("<dl class='small'></dl>")
             .attr({
                 title: tmp.title,
-                source_url : tmp.url
+                source_url : tmp.link
             });
         var target = $("<dd class='item-image'></dd>")
         var li = $("<li class='item' style='display:none;'></li>");
@@ -59,14 +58,13 @@ Categorydata.prototype.loadItem = function() {
         function appendSVG() {
             if (tmp.data != 'image not found') {
                 target
-                    // .html($(svg).find('svg'))
                     .html(tmp.data)
                     .on('click', function(e) {
                         zoomEvent.on(e);
-                        // var svg = $(this).find('svg').clone();
                         createZoom(tmp, item.json.dir);
                     });
             } else {
+                console.log('no image...')
                 target.html('<span class="bold9 small">Not Found.</span>');
             }
             //
@@ -80,21 +78,20 @@ Categorydata.prototype.loadItem = function() {
         }
         //
         if (tmp.data) {
-            appendSVG();
+            setTimeout(function() {
+                appendSVG();
+            }, 0);
         } else {
             $.ajax({
                 type: 'get',
-                url: 'svg/' + item.json.dir + '/' + tmp.svg + '.svg'//,
-                // dataType: 'xml',
+                url: 'svg/' + item.json.dir + '/' + tmp.url + '.svg'
             }).done(function(svg) {
-                // tmp.data = $(svg).find('svg')[0];
                 tmp.data = $('<div></div>').append($(svg).find('svg')).html();
-                appendSVG();
             }).fail(function() {
                 console.log('File Not Found...')
                 tmp.data = 'image not found';
-                appendSVG();
             }).always(function(){
+                appendSVG();
             });
         }
         return dfd.promise();
@@ -106,17 +103,14 @@ Categorydata.prototype.loadItem = function() {
 Categorydata.prototype.showItem = function(li) {
     var dfd = $.Deferred();
     var item = this;
-    var duration = 1;
-    // $('#waypoint').fadeOut(duration, function() {
-        li.fadeIn(duration);
+    var duration = 0;
+    li.fadeIn(duration, function() {
         if (item.check()) {
-            // $('#waypoint').fadeIn(duration, function() {
-                dfd.resolve();
-            // });
+            dfd.resolve();
         } else {
             dfd.reject();
         }
-    // });
+    });
     return dfd;
 }
 //
@@ -137,10 +131,6 @@ var waypoint = {
             .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
     },
     off: function() {
-        // $('#waypoint').fadeOut(250, function() {
-            // $(this).remove();
-        // });
-        // $('#waypoint').show();
         $('#waypoint').remove();
     },
     calc : function() {
@@ -175,32 +165,29 @@ var zoomEvent = {
         $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
     },
     off: function() {
-        // $('#rows-container, #close').fadeIn(250);
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
 //
 function createZoom(data, dir) {
-    // $('#rows-container, #close').fadeOut(100, function() {
-        $('#zoom-container').find('.item-image')
-            .html(data.data);
-        $('#zoom-container').find('.link')
-            .html("<a href='//goo.gl/" + data.url + "' target='_blank'>" + data.title + "</a>");
-        // var serializer = new XMLSerializer();
-        // var source = serializer.serializeToString(svg[0])
-        // var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
-        $('#download').find('a')
-            .attr({
-                'href' : 'svg/' + dir + '/' + data.svg + '.svg',
-                'download' : data.svg + '.svg'
-            });
-        $('#zoom-container').show().animate({
-            left: "0",
-            top: "0",
-            width: '100%',
-            height: '100%'
-        }, 100);
-    // });
+    $('#zoom-container').find('.item-image')
+        .html(data.data);
+    $('#zoom-container').find('.link')
+        .html("<a href='//goo.gl/" + data.link + "' target='_blank'>" + data.title + "</a>");
+    // var serializer = new XMLSerializer();
+    // var source = serializer.serializeToString(svg[0])
+    // var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
+    $('#download').find('a')
+        .attr({
+            'href' : 'svg/' + dir + '/' + data.url + '.svg',
+            'download' : data.url + '.svg'
+        });
+    $('#zoom-container').show().animate({
+        left: "0",
+        top: "0",
+        width: '100%',
+        height: '100%'
+    }, 100);
 }
 
 $(window).on('orientationchange', function() {
@@ -236,33 +223,22 @@ var globalData = {
         }
     }
 };
+console.log(globalData);
 //
 (function(fileList) {
-    var dfds = [];
-    fileList.forEach(function(file, num) {
-        var dfd = $.Deferred();
-        $.getJSON("json/" + file + ".json", function(json) {
-            globalData.data[num] = new Categorydata(json);
-            dfd.resolve();
+    $.getJSON("json/data.json", function(json) {
+        globalData.data = json;
+        //
+        var menu = $('#menu ul');
+        json.forEach(function(data, index) {
+            globalData.data[index] = new Categorydata(data);
+            menu.append('<li class="button"><span>' + data.dir + '</span></li>');
+            data.dir = data.dir.replace(' ', '_');
         });
-        dfds.push(dfd.promise());
-    });
-    $.when.apply($, dfds).then(function() {
-        console.log(globalData);
         start();
     });
-})(['by-pioneer', 'traced-a-photo']);
+})();
 
-//
-$('#menu .button').each(function(index) {
-    $(this).on('click', function() {
-        $('h1').fadeOut(250);
-        $("#menu").fadeOut(250, function() {
-            $('h1').addClass('small').fadeIn(250);
-            globalData.setIndex(index);
-        });
-    });
-});
 //
 $('#close').on('click', function() {
     $("#main").fadeOut(250, function() {
@@ -279,6 +255,20 @@ $('#zoom-container .item-image').on('click', function() {
 });
 //
 function start() {
+    //
+    $('#menu .button').each(function(index) {
+        $(this).on('click', function() {
+            console.log('--click')
+            //分割しないとコールバックを2回呼ぶバグが発生するので
+            //$("#menu, h1").fadeOut(250, function() {...とは書けない
+            $("h1").fadeOut(250);
+            $("#menu").fadeOut(250, function() {
+                $('h1').addClass('small').fadeIn(250);
+                globalData.setIndex(index);
+            });
+        });
+    });
+    //
     $("#loading").fadeToggle(250, function(){
         $("#menu").fadeToggle(250);
     });

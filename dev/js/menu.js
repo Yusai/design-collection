@@ -1,14 +1,4 @@
 //
-$('#menu .button').each(function(index) {
-    $(this).on('click', function() {
-        $('h1').fadeOut(250);
-        $("#menu").fadeOut(250, function() {
-            $('h1').addClass('small').fadeIn(250);
-            globalData.setIndex(index);
-        });
-    });
-});
-//
 $('#close').on('click', function() {
     $("#main").fadeOut(250, function() {
         $('#waypoint').hide();
@@ -24,6 +14,20 @@ $('#zoom-container .item-image').on('click', function() {
 });
 //
 function start() {
+    //
+    $('#menu .button').each(function(index) {
+        $(this).on('click', function() {
+            console.log('--click')
+            //分割しないとコールバックを2回呼ぶバグが発生するので
+            //$("#menu, h1").fadeOut(250, function() {...とは書けない
+            $("h1").fadeOut(250);
+            $("#menu").fadeOut(250, function() {
+                $('h1').addClass('small').fadeIn(250);
+                globalData.setIndex(index);
+            });
+        });
+    });
+    //
     $("#loading").fadeToggle(250, function(){
         $("#menu").fadeToggle(250);
     });

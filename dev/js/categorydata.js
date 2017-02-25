@@ -44,13 +44,12 @@ Categorydata.prototype.loadItem = function() {
     var tmp = this.getJSON();
     var dfd = $.Deferred();
     //
-    //
     if (tmp) {
         var item = this;
         var dl = $("<dl class='small'></dl>")
             .attr({
                 title: tmp.title,
-                source_url : tmp.url
+                source_url : tmp.link
             });
         var target = $("<dd class='item-image'></dd>")
         var li = $("<li class='item' style='display:none;'></li>");
@@ -59,14 +58,13 @@ Categorydata.prototype.loadItem = function() {
         function appendSVG() {
             if (tmp.data != 'image not found') {
                 target
-                    // .html($(svg).find('svg'))
                     .html(tmp.data)
                     .on('click', function(e) {
                         zoomEvent.on(e);
-                        // var svg = $(this).find('svg').clone();
                         createZoom(tmp, item.json.dir);
                     });
             } else {
+                console.log('no image...')
                 target.html('<span class="bold9 small">Not Found.</span>');
             }
             //
@@ -80,21 +78,20 @@ Categorydata.prototype.loadItem = function() {
         }
         //
         if (tmp.data) {
-            appendSVG();
+            setTimeout(function() {
+                appendSVG();
+            }, 0);
         } else {
             $.ajax({
                 type: 'get',
-                url: 'svg/' + item.json.dir + '/' + tmp.svg + '.svg'//,
-                // dataType: 'xml',
+                url: 'svg/' + item.json.dir + '/' + tmp.url + '.svg'
             }).done(function(svg) {
-                // tmp.data = $(svg).find('svg')[0];
                 tmp.data = $('<div></div>').append($(svg).find('svg')).html();
-                appendSVG();
             }).fail(function() {
                 console.log('File Not Found...')
                 tmp.data = 'image not found';
-                appendSVG();
             }).always(function(){
+                appendSVG();
             });
         }
         return dfd.promise();
@@ -106,17 +103,14 @@ Categorydata.prototype.loadItem = function() {
 Categorydata.prototype.showItem = function(li) {
     var dfd = $.Deferred();
     var item = this;
-    var duration = 1;
-    // $('#waypoint').fadeOut(duration, function() {
-        li.fadeIn(duration);
+    var duration = 0;
+    li.fadeIn(duration, function() {
         if (item.check()) {
-            // $('#waypoint').fadeIn(duration, function() {
-                dfd.resolve();
-            // });
+            dfd.resolve();
         } else {
             dfd.reject();
         }
-    // });
+    });
     return dfd;
 }
 //

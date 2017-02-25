@@ -5,10 +5,6 @@ var waypoint = {
             .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
     },
     off: function() {
-        // $('#waypoint').fadeOut(250, function() {
-            // $(this).remove();
-        // });
-        // $('#waypoint').show();
         $('#waypoint').remove();
     },
     calc : function() {
@@ -43,32 +39,29 @@ var zoomEvent = {
         $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
     },
     off: function() {
-        // $('#rows-container, #close').fadeIn(250);
         $('html body').animate({scrollTop: this.scrollTop}, 1);
     }
 };
 //
 function createZoom(data, dir) {
-    // $('#rows-container, #close').fadeOut(100, function() {
-        $('#zoom-container').find('.item-image')
-            .html(data.data);
-        $('#zoom-container').find('.link')
-            .html("<a href='//goo.gl/" + data.url + "' target='_blank'>" + data.title + "</a>");
-        // var serializer = new XMLSerializer();
-        // var source = serializer.serializeToString(svg[0])
-        // var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
-        $('#download').find('a')
-            .attr({
-                'href' : 'svg/' + dir + '/' + data.svg + '.svg',
-                'download' : data.svg + '.svg'
-            });
-        $('#zoom-container').show().animate({
-            left: "0",
-            top: "0",
-            width: '100%',
-            height: '100%'
-        }, 100);
-    // });
+    $('#zoom-container').find('.item-image')
+        .html(data.data);
+    $('#zoom-container').find('.link')
+        .html("<a href='//goo.gl/" + data.link + "' target='_blank'>" + data.title + "</a>");
+    // var serializer = new XMLSerializer();
+    // var source = serializer.serializeToString(svg[0])
+    // var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
+    $('#download').find('a')
+        .attr({
+            'href' : 'svg/' + dir + '/' + data.url + '.svg',
+            'download' : data.url + '.svg'
+        });
+    $('#zoom-container').show().animate({
+        left: "0",
+        top: "0",
+        width: '100%',
+        height: '100%'
+    }, 100);
 }
 
 $(window).on('orientationchange', function() {

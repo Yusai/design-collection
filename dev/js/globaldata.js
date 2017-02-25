@@ -25,19 +25,18 @@ var globalData = {
         }
     }
 };
+console.log(globalData);
 //
 (function(fileList) {
-    var dfds = [];
-    fileList.forEach(function(file, num) {
-        var dfd = $.Deferred();
-        $.getJSON("json/" + file + ".json", function(json) {
-            globalData.data[num] = new Categorydata(json);
-            dfd.resolve();
+    $.getJSON("json/data.json", function(json) {
+        globalData.data = json;
+        //
+        var menu = $('#menu ul');
+        json.forEach(function(data, index) {
+            globalData.data[index] = new Categorydata(data);
+            menu.append('<li class="button"><span>' + data.dir + '</span></li>');
+            data.dir = data.dir.replace(' ', '_');
         });
-        dfds.push(dfd.promise());
-    });
-    $.when.apply($, dfds).then(function() {
-        console.log(globalData);
         start();
     });
-})(['by-pioneer', 'traced-a-photo']);
+})();
