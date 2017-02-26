@@ -10,7 +10,6 @@ body {
   font-size: 2vmax;
   min-height: 100%;
   margin: 0 auto;
-  padding: 1vmax;
   background: #302833;
   color: white;
   display: flex;
@@ -76,7 +75,7 @@ footer {
 }
 #rows-container .item,
 #zoom-container .item {
-  padding: 0.25vmax;
+  padding: 1px;
 }
 #rows-container .item dl,
 #zoom-container .item dl {
@@ -117,7 +116,6 @@ footer {
 .item-image svg {
   width: 100%;
   max-height: 80px;
-  min-height: 40px;
 }
 #zoom-container {
   position: fixed;
@@ -174,7 +172,7 @@ footer {
 }
 #waypoint {
   width: 100%;
-  padding: 0.25vmax;
+  padding: 1px;
   font-weight: 900;
 }
 #waypoint div {
