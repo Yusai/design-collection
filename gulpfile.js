@@ -8,7 +8,7 @@ var webserver = require('gulp-webserver');
 gulp.task('less', function() {
     return gulp.src('./dev/less/*.less')
         .pipe(less())
-        .pipe(gulp.dest('./css/'));
+        .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('js', function() {
@@ -16,7 +16,7 @@ gulp.task('js', function() {
         .pipe(concat('design-collection.js'))
         // .pipe(gulp.dest('./js/'))
         // .pipe(uglify())
-        .pipe(gulp.dest('./js/'));
+        .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('watch-less', function() {
@@ -36,6 +36,4 @@ gulp.task('webserver', function() {
         }));
 });
 
-gulp.task('start', ['js', 'less']);
-
-gulp.task('default', ['start', 'watch', 'webserver']);
+gulp.task('default', ['webserver', 'watch']);

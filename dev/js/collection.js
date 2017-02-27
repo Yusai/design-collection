@@ -1,19 +1,57 @@
 //
-function Categorydata(json) {
-    this.json = json;
+function Collection(json) {
+    var _this = this;
+    this.data = json;
+    this.setRows();
+    //
+    $(window).on('orientationchange', function() {
+        console.log('orient')
+        if ($('#main:visible').length) {
+            _this.orient();
+        }
+    });
+    //
+    this.start();
+    //
+    return this;
 }
-//
-Categorydata.prototype.start = function() {
+
+Collection.prototype.start = function() {
+    console.log('global start');
+    var _this = this;
+    $('#main').fadeIn(250, function() {
+        _this.restart();
+    });
+}
+
+Collection.prototype.restart = function() {
     this.index = 0;
     waypoint.on();
     this.addItem();
 }
-//
-Categorydata.prototype.check = function() {
-     return (this.index < this.json.length);
+
+Collection.prototype.orient = function() {
+    $('#rows-container').children().remove();
+    this.setRows();
+    this.restart();
+}
+
+Collection.prototype.setRows = function() {
+    var rows = Math.floor($('html').width() / 160);
+    if (rows == 0) {
+        rows = 1;
+    }
+    //
+    for (var i = 0; i < rows; i++) {
+        $('#rows-container').append('<ul class="item-container"></ul>');
+    }
 }
 //
-Categorydata.prototype.addItem = function() {
+Collection.prototype.check = function() {
+     return (this.index < this.data.length);
+}
+//
+Collection.prototype.addItem = function() {
     //メニューに戻った場合、読み込み中断
     if (!$('#waypoint:visible').length) {
         return false;
@@ -45,7 +83,7 @@ Categorydata.prototype.addItem = function() {
     }
 }
 //
-Categorydata.prototype.loadItem = function() {
+Collection.prototype.loadItem = function() {
     console.log('loadItem - index : %d', this.index);
     var tmp = this.getJSON();
     var dfd = $.Deferred();
@@ -67,7 +105,7 @@ Categorydata.prototype.loadItem = function() {
                     .html(tmp.data)
                     .on('click', function(e) {
                         zoomEvent.on(e);
-                        createZoom(tmp, item.json.dir);
+                        createZoom(tmp);
                     });
             } else {
                 console.log('no image...')
@@ -106,7 +144,7 @@ Categorydata.prototype.loadItem = function() {
     }
 }
 //
-Categorydata.prototype.showItem = function(li) {
+Collection.prototype.showItem = function(li) {
     var dfd = $.Deferred();
     var item = this;
     var duration = 0;
@@ -120,9 +158,9 @@ Categorydata.prototype.showItem = function(li) {
     return dfd;
 }
 //
-Categorydata.prototype.getJSON = function() {
+Collection.prototype.getJSON = function() {
     if (this.check()) {
-        var tmp = this.json[this.index];
+        var tmp = this.data[this.index];
         this.index ++;
     } else {
         var tmp = false;

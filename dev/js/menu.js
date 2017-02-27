@@ -7,6 +7,7 @@ $('#zoom-container .item-image').on('click', function() {
 });
 //
 function start() {
+    var dfd = $.Deferred();
     //
     $('#menu .button').each(function(index) {
         $(this).on('click', function() {
@@ -16,12 +17,25 @@ function start() {
             $("h1").fadeOut(250);
             $("#menu").fadeOut(250, function() {
                 $('h1').addClass('small').fadeIn(250);
-                globalData.start();
+                dfd.resolve();
+                // globalData.start();
             });
         });
     });
     //
-    $("#loading").fadeToggle(250, function(){
-        $("#menu").fadeToggle(250);
+    $("#loading").fadeOut(250, function(){
+        $('#loading').remove();
+        $("#menu").fadeIn(250);
     });
+    return dfd.promise();
 }
+//
+(function() {
+    $.getJSON("json/data.json", function(json) {
+        start().done(function() {
+            console.log(new Collection(json));
+        });
+        // globalData.init(json);
+        // start();
+    });
+})();

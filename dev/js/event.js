@@ -43,7 +43,7 @@ var zoomEvent = {
     }
 };
 //
-function createZoom(data, dir) {
+function createZoom(data) {
     $('#zoom-container').find('.item-image')
         .html(data.data);
     $('#zoom-container').find('.link')
@@ -70,11 +70,3 @@ function createZoom(data, dir) {
         $('#download').fadeIn(250);
     });
 }
-
-$(window).on('orientationchange', function() {
-    console.log('orient')
-    if ($('#main:visible').length) {
-        console.log('orient')
-        globalData.orient();
-    }
-});
