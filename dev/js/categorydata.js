@@ -3,14 +3,14 @@ function Categorydata(json) {
     this.json = json;
 }
 //
-Categorydata.prototype.select = function() {
+Categorydata.prototype.start = function() {
     this.index = 0;
     waypoint.on();
     this.addItem();
 }
 //
 Categorydata.prototype.check = function() {
-     return (this.index < this.json.json.length);
+     return (this.index < this.json.length);
 }
 //
 Categorydata.prototype.addItem = function() {
@@ -90,7 +90,7 @@ Categorydata.prototype.loadItem = function() {
         } else {
             $.ajax({
                 type: 'get',
-                url: 'svg/' + item.json.dir + '/' + tmp.url + '.svg'
+                url: 'svg/' + tmp.url + '.svg'
             }).done(function(svg) {
                 tmp.data = $('<div></div>').append($(svg).find('svg')).html();
             }).fail(function() {
@@ -122,7 +122,7 @@ Categorydata.prototype.showItem = function(li) {
 //
 Categorydata.prototype.getJSON = function() {
     if (this.check()) {
-        var tmp = this.json.json[this.index];
+        var tmp = this.json[this.index];
         this.index ++;
     } else {
         var tmp = false;

@@ -1,11 +1,11 @@
 //
-$('#close').on('click', function() {
-    $('#waypoint').hide();
-    $("#main").fadeOut(250, function() {
-        $("#menu").fadeIn(250);
-        $('h1').removeClass('small');
-    });
-});
+// $('#close').on('click', function() {
+//     $('#waypoint').hide();
+//     $("#main").fadeOut(250, function() {
+//         $("#menu").fadeIn(250);
+//         $('h1').removeClass('small');
+//     });
+// });
 //
 $('#zoom-container .item-image').on('click', function() {
     $('#zoom-container').fadeOut(100, function() {
@@ -23,7 +23,8 @@ function start() {
             $("h1").fadeOut(250);
             $("#menu").fadeOut(250, function() {
                 $('h1').addClass('small').fadeIn(250);
-                globalData.setIndex(index);
+                globalData.start();
+                // globalData.setIndex(index);
             });
         });
     });

@@ -77,8 +77,8 @@ footer {
 #zoom-container .item {
   padding: 1px;
 }
-#rows-container .item dl,
-#zoom-container .item dl {
+#rows-container dl,
+#zoom-container dl {
   border-radius: 0.1vmin;
   background: white;
   color: #302833;
@@ -86,32 +86,23 @@ footer {
   display: flex;
   flex-direction: column;
 }
-#rows-container .item dt,
-#zoom-container .item dt {
-  padding: 0.5vmax;
-  border-left: 2vmax solid #302833;
-  font-size: 1.5vmax;
-}
-#rows-container .item dd,
-#zoom-container .item dd {
-  margin: 0;
-  padding: 0.75vmax;
-}
-#rows-container .item .link,
-#zoom-container .item .link {
+#rows-container .link,
+#zoom-container .link {
   text-align: right;
 }
-#rows-container .item .link a,
-#zoom-container .item .link a {
+#rows-container .link a,
+#zoom-container .link a {
   color: #b7282e;
   font-weight: 900;
   text-decoration: none;
 }
 .item-image {
-  padding: 3vmax 1vmax;
+  margin: 0;
+  padding: 1vmax;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 52.8px;
 }
 .item-image svg {
   width: 100%;
@@ -123,11 +114,20 @@ footer {
 }
 #zoom-container .item {
   width: 100%;
-  padding: 0.25vmax;
+  padding: 1px;
 }
 #zoom-container .item dl {
   height: 100%;
   padding: 0.5vmax;
+}
+#zoom-container .item dt {
+  padding: 0.5vmax;
+  border-left: 2vmax solid #302833;
+  font-size: 1.5vmax;
+}
+#zoom-container .item dd {
+  margin: 0;
+  padding: 0.75vmax;
 }
 #zoom-container .item .item-image {
   padding: 1.25vmax;
@@ -261,19 +261,4 @@ ul {
 .flex-middle {
   display: flex;
   align-items: center;
-}
-#close {
-  font-size: 2.5vmax;
-  position: fixed;
-  z-index: 1;
-  top: 4px;
-  right: 4px;
-  background: white;
-  color: #302833;
-  padding: 0.75vmax;
-  border-radius: 2px;
-  width: 4vmax;
-  text-align: center;
-  font-weight: 900;
-  box-shadow: 0px 0px 0.33vmax #302833;
 }
