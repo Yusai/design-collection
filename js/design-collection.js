@@ -179,21 +179,28 @@ function createZoom(data, dir) {
     $('#zoom-container').find('.item-image')
         .html(data.data);
     $('#zoom-container').find('.link')
-        .html("<a href='//goo.gl/" + data.link + "' target='_blank'>" + data.title + "</a>");
+        .html("<span>LINK</span><a href='//goo.gl/" + data.link + "' target='_blank'>" + data.title + "</a>");
     // var serializer = new XMLSerializer();
     // var source = serializer.serializeToString(svg[0])
     // var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
     $('#download').find('a')
         .attr({
-            'href' : 'svg/' + dir + '/' + data.url + '.svg',
+            'href' : 'svg/' + data.url + '.svg',
             'download' : data.url + '.svg'
         });
+    if (data.own) {
+        $('#own').addClass('own');
+    } else {
+        $('#own').removeClass('own');
+    }
     $('#zoom-container').show().animate({
         left: "0",
         top: "0",
         width: '100%',
         height: '100%'
-    }, 100);
+    }, 100, function() {
+        $('#download').fadeIn(250);
+    });
 }
 
 $(window).on('orientationchange', function() {
@@ -244,6 +251,7 @@ console.log(globalData);
 
 //
 $('#zoom-container .item-image').on('click', function() {
+    $('#download').fadeOut(100);
     $('#zoom-container').fadeOut(100, function() {
         zoomEvent.off();
     });

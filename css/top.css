@@ -64,6 +64,13 @@ footer {
   display: flex;
   align-items: flex-start;
 }
+#rows-container .item {
+  padding: 1px;
+}
+#rows-container dl {
+  background: white;
+  border-radius: 0.1vmin;
+}
 .item-container {
   background: #302833;
   flex-grow: 1;
@@ -73,28 +80,10 @@ footer {
 #zoom-container {
   display: flex;
 }
-#rows-container .item,
-#zoom-container .item {
-  padding: 1px;
-}
 #rows-container dl,
 #zoom-container dl {
-  border-radius: 0.1vmin;
-  background: white;
   color: #302833;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-#rows-container .link,
-#zoom-container .link {
-  text-align: right;
-}
-#rows-container .link a,
-#zoom-container .link a {
-  color: #b7282e;
-  font-weight: 900;
-  text-decoration: none;
 }
 .item-image {
   margin: 0;
@@ -111,14 +100,19 @@ footer {
 #zoom-container {
   position: fixed;
   z-index: 2;
+  padding: 1px;
 }
 #zoom-container .item {
   width: 100%;
   padding: 1px;
+  border-radius: 0.1vmax;
+  background: white;
 }
 #zoom-container .item dl {
   height: 100%;
   padding: 0.5vmax;
+  display: flex;
+  flex-direction: column;
 }
 #zoom-container .item dt {
   padding: 0.5vmax;
@@ -140,6 +134,25 @@ footer {
 }
 #zoom-container .item-image {
   height: 100%;
+}
+#zoom-container .link {
+  position: absolute;
+  right: 0.5vmax;
+  bottom: 0.5vmax;
+  text-align: right;
+  font-weight: 900;
+}
+#zoom-container .link span {
+  display: inline-block;
+  color: white;
+  background: #b7282e;
+  padding: 0.5vmax;
+  border-radius: 0.1vmax;
+}
+#zoom-container .link a {
+  margin-left: 1vmax;
+  color: #b7282e;
+  text-decoration: none;
 }
 @media (max-width: 480px) {
   body {
@@ -261,4 +274,33 @@ ul {
 .flex-middle {
   display: flex;
   align-items: center;
+}
+#own {
+  position: absolute;
+  width: 1vmax;
+  height: 1vmax;
+  background: #82ae46;
+  left: 1vmax;
+  top: 1vmax;
+}
+#own.own {
+  background: #0095d9;
+}
+#download {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: #0095d9;
+  border-bottom-left-radius: 1.25vmax;
+  font-weight: 900;
+  padding: 1.25vmax;
+  padding-bottom: 2vmax;
+}
+#download a {
+  text-decoration: none;
+  color: white;
+  padding: 0.2vmax 0.5vmax;
+  padding-top: 0;
+  border: 0.5vmax solid white;
+  border-top: 0;
 }

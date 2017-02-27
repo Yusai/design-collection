@@ -1,5 +1,7 @@
 @black: #302833;
-
+@red: #b7282e;
+@green: #82ae46;
+@blue: #0095d9;
 
 * {
     box-sizing: border-box;
@@ -73,6 +75,13 @@ header, footer {
 #rows-container {
     display: flex;
     align-items: flex-start;
+    .item {
+        padding: 1px;
+    }
+    dl {
+        background: white;
+        border-radius: 0.1vmin;
+    }
 }
 
 .item-container {
@@ -81,25 +90,11 @@ header, footer {
     width: 100%;
 }
 
-#rows-container, #zoom-container {
+#rows-container, #zoom-container{
     display: flex;
-    .item {
-        padding: 1px;
-    }
     dl {
-        border-radius: 0.1vmin;
-        background: white;
         color: @black;
         margin: 0;
-        .flex-column;
-    }
-    .link {
-        text-align: right;
-        a {
-            color: #b7282e;
-            font-weight: 900;
-            text-decoration: none;
-        }
     }
 }
 .item-image {
@@ -119,12 +114,16 @@ header, footer {
 #zoom-container {
     position: fixed;
     z-index: 2;
+    padding: 1px;
     .item {
         width: 100%;
         padding: 1px;
+        border-radius: 0.1vmax;
+        background: white;
         dl {
             height: 100%;
             padding: 0.5vmax;
+            .flex-column;
         }
         dt {
             padding: 0.5vmax;
@@ -147,6 +146,25 @@ header, footer {
     }
     .item-image {
         height: 100%;
+    }
+    .link {
+        position: absolute;
+        right: 0.5vmax;
+        bottom: 0.5vmax;
+        text-align: right;
+        font-weight: 900;
+        span {
+            display: inline-block;
+            color: white;
+            background: @red;
+            padding: 0.5vmax;
+            border-radius: 0.1vmax;
+        }
+        a {
+            margin-left: 1vmax;
+            color: @red;
+            text-decoration: none;
+        }
     }
 }
 
@@ -307,4 +325,35 @@ ul {
 .flex-middle {
     .flex;
     align-items: center;
+}
+
+#own {
+    position: absolute;
+    width: 1vmax;
+    height: 1vmax;
+    background: @green;
+    left: 1vmax;
+    top: 1vmax;
+    &.own {
+        background: @blue;
+    }
+}
+
+#download {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: @blue;
+    border-bottom-left-radius: 1.25vmax;
+    .bold9;
+    padding: 1.25vmax;
+    padding-bottom: 2vmax;
+    a {
+        text-decoration: none;
+        color: white;
+        padding: 0.2vmax 0.5vmax;
+        padding-top: 0;
+        border: 0.5vmax solid white;
+        border-top: 0;
+    }
 }
