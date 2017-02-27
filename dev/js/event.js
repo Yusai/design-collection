@@ -68,7 +68,6 @@ $(window).on('orientationchange', function() {
     console.log('orient')
     if ($('#main:visible').length) {
         console.log('orient')
-        // globalData.setIndex(globalData.getIndex());
         globalData.orient();
     }
 });

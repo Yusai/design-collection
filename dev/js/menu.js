@@ -1,12 +1,4 @@
 //
-// $('#close').on('click', function() {
-//     $('#waypoint').hide();
-//     $("#main").fadeOut(250, function() {
-//         $("#menu").fadeIn(250);
-//         $('h1').removeClass('small');
-//     });
-// });
-//
 $('#zoom-container .item-image').on('click', function() {
     $('#zoom-container').fadeOut(100, function() {
         zoomEvent.off();
@@ -24,7 +16,6 @@ function start() {
             $("#menu").fadeOut(250, function() {
                 $('h1').addClass('small').fadeIn(250);
                 globalData.start();
-                // globalData.setIndex(index);
             });
         });
     });

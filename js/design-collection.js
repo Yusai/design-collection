@@ -200,25 +200,12 @@ $(window).on('orientationchange', function() {
     console.log('orient')
     if ($('#main:visible').length) {
         console.log('orient')
-        // globalData.setIndex(globalData.getIndex());
         globalData.orient();
     }
 });
 //
 var globalData = {
-    // index : 0,
     data: [],
-    // rows: 0,
-    // setIndex : function(index) {
-    //     $('#rows-container').children().remove();
-    //     $("#main").fadeIn(250);
-    //     this.index = index;
-    //     this.setRows();
-    //     this.data[this.index].select();
-    // },
-    // getIndex : function() {
-    //     return this.index;
-    // },
     init: function(data) {
         this.data = new Categorydata(data);
         this.setRows();
@@ -240,7 +227,6 @@ var globalData = {
         if (rows == 0) {
             rows = 1;
         }
-        // this.rows = rows;
         //
         for (var i = 0; i < rows; i++) {
             $('#rows-container').append('<ul class="item-container"></ul>');
@@ -252,25 +238,10 @@ console.log(globalData);
 (function(fileList) {
     $.getJSON("json/data.json", function(json) {
         globalData.init(json);
-        //
-        // var menu = $('#menu ul');
-        // json.forEach(function(data, index) {
-        //     globalData.data[index] = new Categorydata(data);
-        //     menu.append('<li class="button"><span>' + data.dir + '</span></li>');
-        //     data.dir = data.dir.replace(' ', '_');
-        // });
         start();
     });
 })();
 
-//
-// $('#close').on('click', function() {
-//     $('#waypoint').hide();
-//     $("#main").fadeOut(250, function() {
-//         $("#menu").fadeIn(250);
-//         $('h1').removeClass('small');
-//     });
-// });
 //
 $('#zoom-container .item-image').on('click', function() {
     $('#zoom-container').fadeOut(100, function() {
@@ -289,7 +260,6 @@ function start() {
             $("#menu").fadeOut(250, function() {
                 $('h1').addClass('small').fadeIn(250);
                 globalData.start();
-                // globalData.setIndex(index);
             });
         });
     });
