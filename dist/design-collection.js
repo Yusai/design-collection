@@ -162,12 +162,24 @@ Collection.prototype.getJSON = function() {
     if (this.check()) {
         var tmp = this.data[this.index];
         this.index ++;
+        //fill mode
+        if (this.index >= this.data.length) {
+            console.log('fill mode')
+            this.index = 0;
+        }
     } else {
         var tmp = false;
     }
     return tmp;
 }
 
+//
+$('#zoom-container .item-image').on('click', function() {
+    $('#download').fadeOut(100);
+    $('#zoom-container').fadeOut(100, function() {
+        zoomEvent.off();
+    });
+});
 //
 var waypoint = {
     on: function() {
@@ -241,13 +253,6 @@ function createZoom(data) {
     });
 }
 
-//
-$('#zoom-container .item-image').on('click', function() {
-    $('#download').fadeOut(100);
-    $('#zoom-container').fadeOut(100, function() {
-        zoomEvent.off();
-    });
-});
 //
 function start() {
     var dfd = $.Deferred();

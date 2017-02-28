@@ -162,6 +162,11 @@ Collection.prototype.getJSON = function() {
     if (this.check()) {
         var tmp = this.data[this.index];
         this.index ++;
+        //fill mode
+        if (this.index >= this.data.length) {
+            console.log('fill mode')
+            this.index = 0;
+        }
     } else {
         var tmp = false;
     }

@@ -1,11 +1,4 @@
 //
-$('#zoom-container .item-image').on('click', function() {
-    $('#download').fadeOut(100);
-    $('#zoom-container').fadeOut(100, function() {
-        zoomEvent.off();
-    });
-});
-//
 function start() {
     var dfd = $.Deferred();
     //
