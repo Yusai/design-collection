@@ -1,3 +1,4 @@
+//
 var fade = {
     anime: function(el, time, sw, func) {
         //true : in, false : out
@@ -5,7 +6,6 @@ var fade = {
             {opacity: 0},
             {opacity: 100}
         ], {
-            fill: 'forwards',
             direction: (function() {
                 if (sw) {
                     el.style.display = '';
@@ -25,7 +25,7 @@ var fade = {
             if (func) {
                 func();
             }
-        }
+        };
         anime.play();
     },
     in: function (el, time, func) {
@@ -44,7 +44,6 @@ var append = function(target, html) {
 // Native
 function getOffset (el) {
   const box = el.getBoundingClientRect();
-
   return {
     top: box.top + window.pageYOffset - document.documentElement.clientTop,
     left: box.left + window.pageXOffset - document.documentElement.clientLeft
@@ -57,10 +56,12 @@ function deferred() {
     deferred.resolve = resolve;
     deferred.reject = reject;
   });
-
   deferred.promise = function() {
     return promise;
   };
-
   return deferred;
 }
+//
+// function scrollTop() {
+//     return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+// }

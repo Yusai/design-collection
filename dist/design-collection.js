@@ -7,9 +7,9 @@ function Collection(json) {
     // $(window).on('orientationchange', function() {
     window.addEventListener('orientationchange', function() {
         console.log('orient')
-        if ($('#main:visible').length) {
+        // if ($('#main:visible').length) {
             _this.orient();
-        }
+        // }
     });
     //
     this.start();
@@ -34,7 +34,8 @@ Collection.prototype.restart = function() {
 };
 
 Collection.prototype.orient = function() {
-    $('#rows-container').children().remove();
+    // $('#rows-container').children().remove();
+    document.getElementById('rows-container').innerHTML = '';
     this.setRows();
     this.restart();
 };
@@ -138,8 +139,8 @@ Collection.prototype.loadItem = function() {
                 //     });
                 target.innerHTML = tmp.data;
                 target.addEventListener('click', function(e) {
-                    zoomEvent.on(e);
-                    createZoom(tmp);
+                    // zoomEvent.on(e);
+                    createZoom(tmp, e);
                 });
             } else {
                 console.log('no image...')
@@ -239,18 +240,14 @@ Collection.prototype.getJSON = function() {
     var zoom_container = document.getElementById('zoom-container');
     var item_image = document.getElementsByClassName('item-image');
     //
-    function on(target) {
-        target.addEventListener('on', function() {
-            var download = document.getElementById('download');
-            fadeOut(download, 100);
-            fadeOut(zoom_container, 100)
-                .done(function() {
-                    zoomEvent.off();
-                });
-        });
-    }
-    on(zoom_container);
-    on(item_image[0]);
+    item_image[0].addEventListener('click', function() {
+        var download = document.getElementById('download');
+        fade.out(download, 100);
+        fade.out(zoom_container, 100);
+            // .done(function() {
+            //     zoomEvent.off();
+            // });
+    });
 })();
 //
 var waypoint = {
@@ -299,44 +296,79 @@ var scrollEvent = {
 };
 //
 var zoomEvent = {
-    scrollTop: 0,
-    on: function(e) {
-        this.scrollTop = $(document).scrollTop();
+    // scrollTop: 0,
+    // on: function(e) {
+    anime: function(e) {
+        // this.scrollTop = $(document).scrollTop();
+        // this.scrollTop = scrollTop();
         var x = e.pageX;
-        var y = e.pageY - this.scrollTop;
-        $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
-    },
-    off: function() {
-        $('html body').animate({scrollTop: this.scrollTop}, 1);
-    }
+        var y = e.pageY - document.body.scrollTop;//scrollTop();// - this.scrollTop;
+        // $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
+        var zoom_container = document.getElementById('zoom-container');
+        //
+        var anime = zoom_container.animate([
+            {
+                width: '0%',
+                height: '0%',
+                left: '' + x + 'px',
+                top: '' + y + 'px'
+            },
+            {
+                width: '100%',
+                height: '100%',
+                left: '0px',
+                top: '0px'
+            }
+        ], {
+            fill: 'forwards',
+            duration: 100
+        });
+        anime.pause();
+        zoom_container.style.display = '';
+        anime.onfinish = function() {
+            fade.in(download, 250);
+        };
+        anime.play();
+    }//,
+    // off: function() {
+    //     // $('html body').animate({scrollTop: this.scrollTop}, 1);
+    // }
 };
 //
-function createZoom(data) {
-    $('#zoom-container').find('.item-image')
-        .html(data.data);
-    $('#zoom-container').find('.link')
-        .html("<span>LINK</span><a href='//goo.gl/" + data.link + "' target='_blank'>" + data.title + "</a>");
-    // var serializer = new XMLSerializer();
-    // var source = serializer.serializeToString(svg[0])
-    // var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
-    $('#download').find('a')
-        .attr({
-            'href' : 'svg/' + data.url + '.svg',
-            'download' : data.url + '.svg'
-        });
+function createZoom(data, event) {
+    var zoom_container = document.getElementById('zoom-container');
+    // $('#zoom-container').find('.item-image')
+    //     .html(data.data);
+    zoom_container.getElementsByClassName('item-image')[0].innerHTML = data.data;
+    // $('#zoom-container').find('.link')
+    //     .html("<span>LINK</span><a href='//goo.gl/" + data.link + "' target='_blank'>" + data.title + "</a>");
+    var link = zoom_container.getElementsByClassName('link')[0];
+    link.innerHTML = '<span>LINK</span><a href="//goo.gl/' + data.link + '" target="_blank">' + data.title + '</a>';
+    // $('#download').find('a')
+    //     .attr({
+    //         'href' : 'svg/' + data.url + '.svg',
+    //         'download' : data.url + '.svg'
+    //     });
+    var a = document.getElementById('download').getElementsByTagName('a')[0];
+    a.setAttribute('href', 'svg/' + data.url + '.svg');
+    a.setAttribute('download', data.url + '.svg');
+    var own = document.getElementById('own');
     if (data.own) {
-        $('#own').addClass('own');
+        // $('#own').addClass('own');
+        own.classList.add('own');
     } else {
-        $('#own').removeClass('own');
+        // $('#own').removeClass('own');
+        own.classList.remove('own');
     }
-    $('#zoom-container').show().animate({
-        left: "0",
-        top: "0",
-        width: '100%',
-        height: '100%'
-    }, 100, function() {
-        $('#download').fadeIn(250);
-    });
+    // $('#zoom-container').show().animate({
+    //     left: "0",
+    //     top: "0",
+    //     width: '100%',
+    //     height: '100%'
+    // }, 100, function() {
+    //     $('#download').fadeIn(250);
+    // });
+    zoomEvent.anime(event);
 }
 
 //
@@ -414,6 +446,7 @@ function start() {
     }
     request.send(null);
 })();
+//
 var fade = {
     anime: function(el, time, sw, func) {
         //true : in, false : out
@@ -421,7 +454,6 @@ var fade = {
             {opacity: 0},
             {opacity: 100}
         ], {
-            fill: 'forwards',
             direction: (function() {
                 if (sw) {
                     el.style.display = '';
@@ -441,7 +473,7 @@ var fade = {
             if (func) {
                 func();
             }
-        }
+        };
         anime.play();
     },
     in: function (el, time, func) {
@@ -460,7 +492,6 @@ var append = function(target, html) {
 // Native
 function getOffset (el) {
   const box = el.getBoundingClientRect();
-
   return {
     top: box.top + window.pageYOffset - document.documentElement.clientTop,
     left: box.left + window.pageXOffset - document.documentElement.clientLeft
@@ -473,10 +504,12 @@ function deferred() {
     deferred.resolve = resolve;
     deferred.reject = reject;
   });
-
   deferred.promise = function() {
     return promise;
   };
-
   return deferred;
 }
+//
+// function scrollTop() {
+//     return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+// }

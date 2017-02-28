@@ -7,9 +7,9 @@ function Collection(json) {
     // $(window).on('orientationchange', function() {
     window.addEventListener('orientationchange', function() {
         console.log('orient')
-        if ($('#main:visible').length) {
+        // if ($('#main:visible').length) {
             _this.orient();
-        }
+        // }
     });
     //
     this.start();
@@ -34,7 +34,8 @@ Collection.prototype.restart = function() {
 };
 
 Collection.prototype.orient = function() {
-    $('#rows-container').children().remove();
+    // $('#rows-container').children().remove();
+    document.getElementById('rows-container').innerHTML = '';
     this.setRows();
     this.restart();
 };
@@ -138,8 +139,8 @@ Collection.prototype.loadItem = function() {
                 //     });
                 target.innerHTML = tmp.data;
                 target.addEventListener('click', function(e) {
-                    zoomEvent.on(e);
-                    createZoom(tmp);
+                    // zoomEvent.on(e);
+                    createZoom(tmp, e);
                 });
             } else {
                 console.log('no image...')
