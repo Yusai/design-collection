@@ -150,7 +150,7 @@ Collection.prototype.loadItem = function() {
             item.showItem(li).then(function() {
                 dfd.resolve();
             }, function() {
-                def.reject();
+                dfd.reject();
             });
                 // .done(function() {
                 //     dfd.resolve();
@@ -161,9 +161,9 @@ Collection.prototype.loadItem = function() {
         }
         //
         if (tmp.data) {
-            setTimeout(function() {
+            // setTimeout(function() {
                 appendSVG();
-            }, 0);
+            // }, 0);
         } else {
             // $.ajax({
             //     type: 'get',
