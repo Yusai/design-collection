@@ -4,22 +4,6 @@
   window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-// var startTime = Date.now();  // Firefoxのみ対応している関数です。 その他のブラウザでは Date.now() などの関数を使うことができます。
-// console.log(startTime)
-
-// function step() {
-//   var progress = Date.now() - startTime;
-//     console.log(progress)
-//   //d.style.left = Math.min(progress/10, 200) + "px";
-//   if (progress < 2000) {
-//     window.requestAnimationFrame(step);
-//   } else {
-//       console.log('end')
-//   }
-// }
-
-// requestAnimationFrame(step);
-
 function MyAnime(el, param, time) {
     var startTime = Date.now();
     //
@@ -69,43 +53,6 @@ function Fade(el, time, sw) {
     });
     return anime;
 }
-//
-// var fade = {
-//     anime: function(el, time, sw, func) {
-//         //true : in, false : out
-//         var anime = el.animate([
-//             {opacity: 0},
-//             {opacity: 100}
-//         ], {
-//             direction: (function() {
-//                 if (sw) {
-//                     el.style.display = '';
-//                     return 'normal';
-//                 } else {
-//                     return 'reverse';
-//                 }
-//             })(),
-//             duration: time
-//         });
-//         //
-//         anime.pause();
-//         anime.onfinish = function() {
-//             if (!sw) {
-//                 el.style.display = 'none';
-//             }
-//             if (func) {
-//                 func();
-//             }
-//         };
-//         anime.play();
-//     },
-//     in: function (el, time, func) {
-//         this.anime(el, time, true, func);
-//     },
-//     out: function (el, time, func) {
-//         this.anime(el, time, false, func);
-//     }
-// };
 
 var fade = {
     in: function(el, time) {

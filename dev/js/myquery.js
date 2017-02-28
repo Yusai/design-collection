@@ -24,7 +24,3 @@ function deferred() {
   };
   return deferred;
 }
-//
-// function scrollTop() {
-//     return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-// }
