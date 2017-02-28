@@ -79,31 +79,40 @@ Collection.prototype.addItem = function() {
 };
 //
 Collection.prototype.loadItem = function() {
-    console.log('loadItem - index : %d', this.index);
+    // console.log('loadItem - index : %d', this.index);
     var tmp = this.getJSON();
-    var dfd = deferred();
     //
-    if (tmp) {
-        var item = this;
-        //
-        var target = document.createElement('dd');
-        target.classList.add('item-image');
-        //
-        var dl = document.createElement('dl');
-        dl.classList.add('small');
-        dl.setAttribute('title', tmp.title);
-        dl.setAttribute('source_url', tmp.link);
-        dl.appendChild(target);
-        //
-        var li = document.createElement('li');
-        li.classList.add('item');
-        li.style.display = 'none';
-        li.appendChild(dl);
-        //
-        var waypoint = document.getElementById('waypoint');
-        waypoint.parentNode.insertBefore(li, waypoint);
+    if (!tmp) {
+        var promise = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                reject();
+            }, 0);
+        });
+        return promise;
+    }
+    //
+    var _this = this;
+    var promise = new Promise(function(resolve, reject) {
         //
         function appendSVG() {
+            //
+            var target = document.createElement('dd');
+            target.classList.add('item-image');
+            //
+            var dl = document.createElement('dl');
+            dl.classList.add('small');
+            dl.setAttribute('title', tmp.title);
+            dl.setAttribute('source_url', tmp.link);
+            dl.appendChild(target);
+            //
+            var li = document.createElement('li');
+            li.classList.add('item');
+            li.style.display = 'none';
+            li.appendChild(dl);
+            //
+            var waypoint = document.getElementById('waypoint');
+            waypoint.parentNode.insertBefore(li, waypoint);
+            //
             if (tmp.data != 'image not found') {
                 target.innerHTML = tmp.data;
                 target.addEventListener('click', function(e) {
@@ -111,13 +120,13 @@ Collection.prototype.loadItem = function() {
                 });
             } else {
                 console.log('no image...')
-                append(target, '<span class="bold9 small">Not Found.</span>');
+                target.innerHTML = '<span class="bold9 small">Not Found.</span>';
             }
             //
-            item.showItem(li).then(function() {
-                dfd.resolve();
+            _this.showItem(li).then(function() {
+                resolve();
             }, function() {
-                dfd.reject();
+                reject();
             });
         }
         //
@@ -139,24 +148,23 @@ Collection.prototype.loadItem = function() {
             };
             request.send(null);
         }
-        return dfd.promise();
-    } else {
-        return dfd.reject();
-    }
+    });
+    return promise;
 };
 //
 Collection.prototype.showItem = function(li) {
-    var dfd = deferred();
     var item = this;
     var duration = 0;
-    fade.in(li, duration).then(function() {
-        if (item.check()) {
-            dfd.resolve();
-        } else {
-            dfd.reject();
-        }
+    var promise = new Promise(function(resolve, reject) {
+        fade.in(li, duration).then(function() {
+            if (item.check()) {
+                resolve();
+            } else {
+                reject();
+            }
+        });
     });
-    return dfd.promise();
+    return promise;
 };
 //
 Collection.prototype.getJSON = function() {

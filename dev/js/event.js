@@ -14,7 +14,7 @@ var waypoint = {
     on: function() {
         var container = document.getElementById('rows-container');
         target = container.childNodes[this.calc()];
-        append(target, '<li id="waypoint" class="anime-blink"><span>Now Loading...</span></li>');
+        target.innerHTML = '<li id="waypoint" class="anime-blink"><div><span>Now Loading...</span></div></li>';
     },
     off: function() {
         document.getElementById('waypoint').remove();
