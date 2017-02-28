@@ -1,39 +1,70 @@
 //
-$('#zoom-container .item-image').on('click', function() {
-    $('#download').fadeOut(100);
-    $('#zoom-container').fadeOut(100, function() {
-        zoomEvent.off();
-    });
-});
+// $('#zoom-container .item-image').on('click', function() {
+//     $('#download').fadeOut(100);
+//     $('#zoom-container').fadeOut(100, function() {
+//         zoomEvent.off();
+//     });
+// });
+(function() {
+    var zoom_container = document.getElementById('zoom-container');
+    var item_image = document.getElementsByClassName('item-image');
+    //
+    function on(target) {
+        target.addEventListener('on', function() {
+            var download = document.getElementById('download');
+            fadeOut(download, 100);
+            fadeOut(zoom_container, 100)
+                .done(function() {
+                    zoomEvent.off();
+                });
+        });
+    }
+    on(zoom_container);
+    on(item_image[0]);
+})();
 //
 var waypoint = {
     on: function() {
-        $('#rows-container').children().eq(this.calc())
-            .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
+        // $('#rows-container').children().eq(this.calc())
+        //     .append($("<li id='waypoint' class='anime-blink'><div><span>Now Loading...</span></div></li>"));
+        var container = document.getElementById('rows-container');
+        target = container.childNodes[this.calc()];
+        append(target, '<li id="waypoint" class="anime-blink"><span>Now Loading...</span></li>');
     },
     off: function() {
-        $('#waypoint').remove();
+        // $('#waypoint').remove();
+        document.getElementById('waypoint').remove();
     },
     calc : function() {
         var heightList = [];
-        $('#rows-container').children().each(function(){
-            heightList.push($(this).height());
+        // $('#rows-container').children().each(function(){
+        //     heightList.push($(this).height());
+        // });
+        var container = document.getElementById('rows-container');
+        container.childNodes.forEach(function(node) {
+            heightList.push(node.clientHeight);
         });
         return heightList.indexOf(Math.min.apply(null, heightList));
     },
     move : function() {
-        $('#waypoint').appendTo($('#rows-container').children().eq(this.calc()));
+        // $('#waypoint').appendTo($('#rows-container').children().eq(this.calc()));
+        var container = document.getElementById('rows-container');
+        target = container.childNodes[this.calc()];
+        var waypoint = document.getElementById('waypoint');
+        target.appendChild(waypoint);
     }
 };
 //
 var scrollEvent = {
     on: function(tmp) {
-        $(window).on('scroll', function() {
+        // $(window).on('scroll', function() {
+        window.addEventListener('scroll', function() {
             tmp.addItem();
         });
     },
     off: function() {
-        $(window).off('scroll');
+        // $(window).off('scroll');
+        window.removeEventListener('scroll', null);
     }
 };
 //
