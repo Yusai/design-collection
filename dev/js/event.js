@@ -37,9 +37,14 @@ var waypoint = {
         //     heightList.push($(this).height());
         // });
         var container = document.getElementById('rows-container');
-        container.childNodes.forEach(function(node) {
-            heightList.push(node.clientHeight);
-        });
+        // container.childNodes.forEach(function(node) {
+        //     console.log(node)
+        //     heightList.push(node.clientHeight);
+        // });
+        var children = container.childNodes;
+        for (var i = 0; i < children.length; i++) {
+            heightList.push(children[i].clientHeight);
+        }
         return heightList.indexOf(Math.min.apply(null, heightList));
     },
     move : function() {
@@ -75,29 +80,38 @@ var zoomEvent = {
         // $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
         var zoom_container = document.getElementById('zoom-container');
         //
-        var anime = zoom_container.animate([
-            {
-                width: '0%',
-                height: '0%',
-                left: '' + x + 'px',
-                top: '' + y + 'px'
-            },
-            {
-                width: '100%',
-                height: '100%',
-                left: '0px',
-                top: '0px'
-            }
-        ], {
-            fill: 'forwards',
-            duration: 100
-        });
-        anime.pause();
-        zoom_container.style.display = '';
-        anime.onfinish = function() {
+        // var anime = zoom_container.animate([
+        //     {
+        //         width: '0%',
+        //         height: '0%',
+        //         left: '' + x + 'px',
+        //         top: '' + y + 'px'
+        //     },
+        //     {
+        //         width: '100%',
+        //         height: '100%',
+        //         left: '0px',
+        //         top: '0px'
+        //     }
+        // ], {
+        //     fill: 'forwards',
+        //     duration: 100
+        // });
+        // anime.pause();
+        // zoom_container.style.display = '';
+        // anime.onfinish = function() {
+        //     fade.in(download, 250);
+        // };
+        // anime.play();
+        var param = [
+            {style: 'top', start: y, end: 0, unit: 'px'},
+            {style: 'left', start: x, end: 0, unit: 'px'},
+            {style: 'width', start: 0, end: 100, unit: '%'},
+            {style: 'height', start: 0, end: 100, unit: '%'}
+        ];
+        new MyAnime(zoom_container, param, 100).then(function() {
             fade.in(download, 250);
-        };
-        anime.play();
+        });
     }//,
     // off: function() {
     //     // $('html body').animate({scrollTop: this.scrollTop}, 1);

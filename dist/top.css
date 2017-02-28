@@ -49,7 +49,7 @@ footer {
     opacity: 0;
   }
   to {
-    opacity: 100;
+    opacity: 1;
   }
 }
 #menu {
@@ -101,6 +101,7 @@ footer {
   position: fixed;
   z-index: 2;
   padding: 1px;
+  background: #302833;
 }
 #zoom-container .item {
   width: 100%;

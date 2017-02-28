@@ -22,7 +22,7 @@ Collection.prototype.start = function() {
     var _this = this;
     // $('#main').fadeIn(250, function() {
     var main = document.getElementById('main');
-    fade.in(main, 250, function() {
+    fade.in(main, 250).then(function() {
         _this.restart();
     });
 };
@@ -204,7 +204,7 @@ Collection.prototype.showItem = function(li) {
     var item = this;
     var duration = 0;
     // li.fadeIn(duration, function() {
-    fade.in(li, duration, function() {
+    fade.in(li, duration).then(function() {
         if (item.check()) {
             dfd.resolve();
         } else {

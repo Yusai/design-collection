@@ -28,7 +28,7 @@ function start() {
         button.addEventListener('click', function() {
             var h1 = document.getElementsByTagName('h1')[0];
             fade.out(h1, 250);
-            fade.out(menu, 250, function() {
+            fade.out(menu, 250).then(function() {
                 h1.classList.add('small');
                 fade.in(h1, 250);
                 resolve();
@@ -40,7 +40,11 @@ function start() {
     //     fade(document.getElementById('menu', 250));
     // });
     var loading = document.getElementById('loading');
-    fade.out(loading, 250, function() {
+    // fade.out(loading, 250, function() {
+    //     loading.remove();
+    //     fade.in(document.getElementById('menu'), 250);
+    // });
+    fade.out(loading, 250).then(function() {
         loading.remove();
         fade.in(document.getElementById('menu'), 250);
     });

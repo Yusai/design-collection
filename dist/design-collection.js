@@ -1,3 +1,120 @@
+(function() {
+  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+  window.requestAnimationFrame = requestAnimationFrame;
+})();
+
+// var startTime = Date.now();  // Firefoxのみ対応している関数です。 その他のブラウザでは Date.now() などの関数を使うことができます。
+// console.log(startTime)
+
+// function step() {
+//   var progress = Date.now() - startTime;
+//     console.log(progress)
+//   //d.style.left = Math.min(progress/10, 200) + "px";
+//   if (progress < 2000) {
+//     window.requestAnimationFrame(step);
+//   } else {
+//       console.log('end')
+//   }
+// }
+
+// requestAnimationFrame(step);
+
+function MyAnime(el, param, time) {
+    var startTime = Date.now();
+    //
+    param.forEach(function(e) {
+        el.style[e.style] = '' + e.start + e.unit;
+    });
+    el.style.display = '';
+    //
+    var promise = new Promise(function(resolve) {
+        //
+        function step() {
+            var progress = Date.now() - startTime;
+            if (progress < time) {
+                //
+                param.forEach(function(e) {
+                    el.style[e.style] = '' + (e.start + (e.end - e.start) * (progress / time)) + e.unit;
+                });
+                //
+                requestAnimationFrame(step);
+            } else {
+                param.forEach(function(e) {
+                    el.style[e.style] = '' + e.end + e.unit;
+                })
+                resolve();
+            }
+        }
+        //
+        requestAnimationFrame(step);
+    });
+    return promise;
+}
+
+function Fade(el, time, sw) {
+    if (sw) {
+        el.style.opacity = 0;
+        el.style.display = '';
+        var param = [{style: 'opacity', start: 0, end: 1, unit: ''}];
+    } else {
+        var param = [{style: 'opacity', start: 1, end: 0, unit: ''}];
+    }
+    var anime = new MyAnime(el, param, time);
+    anime.then(function() {
+        el.style.opacity = '';
+        if (!sw) {
+            el.style.display = 'none';
+        }
+    });
+    return anime;
+}
+//
+// var fade = {
+//     anime: function(el, time, sw, func) {
+//         //true : in, false : out
+//         var anime = el.animate([
+//             {opacity: 0},
+//             {opacity: 100}
+//         ], {
+//             direction: (function() {
+//                 if (sw) {
+//                     el.style.display = '';
+//                     return 'normal';
+//                 } else {
+//                     return 'reverse';
+//                 }
+//             })(),
+//             duration: time
+//         });
+//         //
+//         anime.pause();
+//         anime.onfinish = function() {
+//             if (!sw) {
+//                 el.style.display = 'none';
+//             }
+//             if (func) {
+//                 func();
+//             }
+//         };
+//         anime.play();
+//     },
+//     in: function (el, time, func) {
+//         this.anime(el, time, true, func);
+//     },
+//     out: function (el, time, func) {
+//         this.anime(el, time, false, func);
+//     }
+// };
+
+var fade = {
+    in: function(el, time) {
+        return new Fade(el, time , true);
+    },
+    out: function(el, time) {
+        return new Fade(el, time, false);
+    }
+};
 //
 function Collection(json) {
     var _this = this;
@@ -22,7 +139,7 @@ Collection.prototype.start = function() {
     var _this = this;
     // $('#main').fadeIn(250, function() {
     var main = document.getElementById('main');
-    fade.in(main, 250, function() {
+    fade.in(main, 250).then(function() {
         _this.restart();
     });
 };
@@ -204,7 +321,7 @@ Collection.prototype.showItem = function(li) {
     var item = this;
     var duration = 0;
     // li.fadeIn(duration, function() {
-    fade.in(li, duration, function() {
+    fade.in(li, duration).then(function() {
         if (item.check()) {
             dfd.resolve();
         } else {
@@ -268,9 +385,14 @@ var waypoint = {
         //     heightList.push($(this).height());
         // });
         var container = document.getElementById('rows-container');
-        container.childNodes.forEach(function(node) {
-            heightList.push(node.clientHeight);
-        });
+        // container.childNodes.forEach(function(node) {
+        //     console.log(node)
+        //     heightList.push(node.clientHeight);
+        // });
+        var children = container.childNodes;
+        for (var i = 0; i < children.length; i++) {
+            heightList.push(children[i].clientHeight);
+        }
         return heightList.indexOf(Math.min.apply(null, heightList));
     },
     move : function() {
@@ -306,29 +428,38 @@ var zoomEvent = {
         // $('#zoom-container').css({top: y, left: x, width: '0', height: '0'});
         var zoom_container = document.getElementById('zoom-container');
         //
-        var anime = zoom_container.animate([
-            {
-                width: '0%',
-                height: '0%',
-                left: '' + x + 'px',
-                top: '' + y + 'px'
-            },
-            {
-                width: '100%',
-                height: '100%',
-                left: '0px',
-                top: '0px'
-            }
-        ], {
-            fill: 'forwards',
-            duration: 100
-        });
-        anime.pause();
-        zoom_container.style.display = '';
-        anime.onfinish = function() {
+        // var anime = zoom_container.animate([
+        //     {
+        //         width: '0%',
+        //         height: '0%',
+        //         left: '' + x + 'px',
+        //         top: '' + y + 'px'
+        //     },
+        //     {
+        //         width: '100%',
+        //         height: '100%',
+        //         left: '0px',
+        //         top: '0px'
+        //     }
+        // ], {
+        //     fill: 'forwards',
+        //     duration: 100
+        // });
+        // anime.pause();
+        // zoom_container.style.display = '';
+        // anime.onfinish = function() {
+        //     fade.in(download, 250);
+        // };
+        // anime.play();
+        var param = [
+            {style: 'top', start: y, end: 0, unit: 'px'},
+            {style: 'left', start: x, end: 0, unit: 'px'},
+            {style: 'width', start: 0, end: 100, unit: '%'},
+            {style: 'height', start: 0, end: 100, unit: '%'}
+        ];
+        new MyAnime(zoom_container, param, 100).then(function() {
             fade.in(download, 250);
-        };
-        anime.play();
+        });
     }//,
     // off: function() {
     //     // $('html body').animate({scrollTop: this.scrollTop}, 1);
@@ -401,7 +532,7 @@ function start() {
         button.addEventListener('click', function() {
             var h1 = document.getElementsByTagName('h1')[0];
             fade.out(h1, 250);
-            fade.out(menu, 250, function() {
+            fade.out(menu, 250).then(function() {
                 h1.classList.add('small');
                 fade.in(h1, 250);
                 resolve();
@@ -413,7 +544,11 @@ function start() {
     //     fade(document.getElementById('menu', 250));
     // });
     var loading = document.getElementById('loading');
-    fade.out(loading, 250, function() {
+    // fade.out(loading, 250, function() {
+    //     loading.remove();
+    //     fade.in(document.getElementById('menu'), 250);
+    // });
+    fade.out(loading, 250).then(function() {
         loading.remove();
         fade.in(document.getElementById('menu'), 250);
     });
@@ -447,43 +582,6 @@ function start() {
     request.send(null);
 })();
 //
-var fade = {
-    anime: function(el, time, sw, func) {
-        //true : in, false : out
-        var anime = el.animate([
-            {opacity: 0},
-            {opacity: 100}
-        ], {
-            direction: (function() {
-                if (sw) {
-                    el.style.display = '';
-                    return 'normal';
-                } else {
-                    return 'reverse';
-                }
-            })(),
-            duration: time
-        });
-        //
-        anime.pause();
-        anime.onfinish = function() {
-            if (!sw) {
-                el.style.display = 'none';
-            }
-            if (func) {
-                func();
-            }
-        };
-        anime.play();
-    },
-    in: function (el, time, func) {
-        this.anime(el, time, true, func);
-    },
-    out: function (el, time, func) {
-        this.anime(el, time, false, func);
-    }
-};
-
 var append = function(target, html) {
     target.insertAdjacentHTML('beforeend', html);
 };
