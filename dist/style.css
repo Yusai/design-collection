@@ -232,6 +232,7 @@ ul {
 #link {
   font-size: 2vmin;
   position: absolute;
+  top: 0.5vmin;
   text-align: right;
   font-weight: 900;
 }
