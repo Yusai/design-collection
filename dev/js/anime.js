@@ -4,7 +4,10 @@
   window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-function MyAnime(el, param, time) {
+function MyAnime(target, param, time) {
+    //
+    var el = target.el || target;
+    //
     var startTime = Date.now();
     //
     param.forEach(function(e) {
@@ -36,7 +39,9 @@ function MyAnime(el, param, time) {
     return promise;
 }
 
-function Fade(el, time, sw) {
+function Fade(target, time, sw) {
+    var el = target.el || target;
+    //
     if (sw) {
         el.style.opacity = 0;
         el.style.display = '';
@@ -47,9 +52,7 @@ function Fade(el, time, sw) {
     var anime = new MyAnime(el, param, time);
     anime.then(function() {
         el.style.opacity = '';
-        if (!sw) {
-            el.style.display = 'none';
-        }
+        !sw && (el.style.display = 'none');
     });
     return anime;
 }

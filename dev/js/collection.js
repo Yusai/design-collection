@@ -3,9 +3,11 @@ function Collection(json) {
     var _this = this;
     this.data = json;
     this.setRows();
+    this.waypoint = new Waypoint();
+    this.loaded = false;
+    this.infinit = false; //for debug
     //
     window.addEventListener('orientationchange', function() {
-        console.log('orient')
         _this.orient();
     });
     //
@@ -17,33 +19,41 @@ function Collection(json) {
 Collection.prototype.start = function() {
     console.log('global start');
     var _this = this;
-    var main = document.getElementById('main');
-    fade.in(main, 250).then(function() {
+    fade.in($$('#main'), 250).then(function() {
         _this.restart();
     });
 };
 
 Collection.prototype.restart = function() {
     this.index = 0;
-    waypoint.on();
+    this.fillMode = false;
+    this.addStop = false;
+    this.waypoint.on();
+    //
+    scrollEvent.on(this);
+    //
+    $$('#rows-container').removeClass('stretch');
     this.addItem();
 };
 
 Collection.prototype.orient = function() {
-    document.getElementById('rows-container').innerHTML = '';
+    $$('#rows-container').html();
     this.setRows();
+    scrollEvent.off();
     this.restart();
 };
 
 Collection.prototype.setRows = function() {
-    var rows = Math.floor(window.innerWidth / 160);
-    if (rows == 0) {
-        rows = 1;
+    var rows = Math.floor(window.innerWidth / 160) || 1;
+    if (window.innerHeight > window.innerWidth) {
+        var max = Math.floor(this.data.length / 4);
+    } else {
+        var max = Math.floor(this.data.length / 3);
     }
+    rows > max && (rows = max);
     //
-    var container = document.getElementById('rows-container');
     for (var i = 0; i < rows; i++) {
-        container.insertAdjacentHTML("beforeend", '<ul class="item-container"></ul>');
+        $$('#rows-container').append($$('$$ul').addClass('item-container'));
     }
 };
 //
@@ -53,24 +63,28 @@ Collection.prototype.check = function() {
 //
 Collection.prototype.addItem = function() {
     var _this = this;
-    var waypointTop = getOffset(document.getElementById('waypoint')).top;
+    if (!this.fillMode && this.addStop && this.loaded) {
+        this.waypoint.off();
+        return false;
+    }
     // https://github.com/oneuijs/You-Dont-Need-jQuery#promises
     var scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-    if ((waypointTop - scrollTop + 12) < window.innerHeight) {
+    if ((_this.waypoint.top() - scrollTop + 12) < window.innerHeight) {
         scrollEvent.off();
         this.loadItem()
             //次のアイテムがある場合はresolveが返ってきて、引き続きアイテム挿入を呼び出す
             .then(function() {
-                waypoint.move();
+                _this.waypoint.move();
                 //画面下まで到達または閉じるボタンが押された場合読み込み中断
                 if (!_this.addItem()) {
                     scrollEvent.on(_this);
                     console.log('addItem stop');
+                    _this.addStop = true;
                 }
             }, function() {
             // //次のアイテムがない場合はrejectが返ってきて終了
                 console.log('item loaded');
-                waypoint.off();
+                _this.waypoint.off();
             });
         return true;
     } else {
@@ -79,14 +93,15 @@ Collection.prototype.addItem = function() {
 };
 //
 Collection.prototype.loadItem = function() {
-    // console.log('loadItem - index : %d', this.index);
+    var index = this.index;
     var tmp = this.getJSON();
-    //
+    //check item loaded
     if (!tmp) {
+        console.log('check')
         var promise = new Promise(function(resolve, reject) {
             setTimeout(function() {
                 reject();
-            }, 0);
+            }, 1);
         });
         return promise;
     }
@@ -96,31 +111,24 @@ Collection.prototype.loadItem = function() {
         //
         function appendSVG() {
             //
-            var target = document.createElement('dd');
-            target.classList.add('item-image');
+            var target = $$('$$dd').addClass('item-image');
             //
-            var dl = document.createElement('dl');
-            dl.classList.add('small');
-            dl.setAttribute('title', tmp.title);
-            dl.setAttribute('source_url', tmp.link);
-            dl.appendChild(target);
+            var dl = $$('$$dl')
+                .addClass('small')
+                .setAttr({title: tmp.title, source_url: tmp.link});
             //
-            var li = document.createElement('li');
-            li.classList.add('item');
-            li.style.display = 'none';
-            li.appendChild(dl);
+            var li = $$('$$li').addClass('item').hide();
             //
-            var waypoint = document.getElementById('waypoint');
-            waypoint.parentNode.insertBefore(li, waypoint);
+            _this.waypoint.before(li.append(dl.append(target)));
             //
             if (tmp.data != 'image not found') {
-                target.innerHTML = tmp.data;
-                target.addEventListener('click', function(e) {
+                target.html(tmp.data);
+                target.on('click', function(e) {
                     createZoom(tmp, e);
                 });
             } else {
                 console.log('no image...')
-                target.innerHTML = '<span class="bold9 small">Not Found.</span>';
+                target.html('<span class="bold9 small">Not Found.</span>');
             }
             //
             _this.showItem(li).then(function() {
@@ -139,9 +147,10 @@ Collection.prototype.loadItem = function() {
                 if (request.status >= 200 && request.status < 400) {
                     //success
                     tmp.data = request.responseText;
+                    console.log('SVG Loaded : %d', index);
                 } else {
                     //false
-                    console.log('File Not Found...');
+                    console.log('File Not Found : %d', index);
                     tmp.data = 'image not found';
                 }
                 appendSVG();
@@ -153,15 +162,11 @@ Collection.prototype.loadItem = function() {
 };
 //
 Collection.prototype.showItem = function(li) {
-    var item = this;
-    var duration = 0;
+    var _this = this;
+    var duration = 1;
     var promise = new Promise(function(resolve, reject) {
         fade.in(li, duration).then(function() {
-            if (item.check()) {
-                resolve();
-            } else {
-                reject();
-            }
+            _this.check() ? resolve() : reject();
         });
     });
     return promise;
@@ -171,11 +176,14 @@ Collection.prototype.getJSON = function() {
     if (this.check()) {
         var tmp = this.data[this.index];
         this.index ++;
-        //fill mode
-        if (this.index >= this.data.length) {
-            console.log('fill mode')
-            this.index = 0;
+        //
+        if (this.index == this.data.length && !this.loaded) {
+            console.log('svg files loaded');
+            this.loaded = true;
         }
+        this.loaded && !this.infinit && this.addStop && (this.fillMode = false);
+        //fill mode
+        this.fillMode && this.index >= this.data.length && (this.index = 0);
     } else {
         var tmp = false;
     }

@@ -6,7 +6,7 @@ var uglify = require('gulp-uglify');
 var webserver = require('gulp-webserver');
 
 gulp.task('less', function() {
-    return gulp.src('./dev/less/*.less')
+    return gulp.src('./dev/less/style.less')
         .pipe(less())
         .pipe(gulp.dest('./dist/'));
 });

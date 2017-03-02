@@ -1,23 +1,27 @@
 //
 function start() {
+    var menu = $$('#menu');
     var promise = new Promise(function(resolve) {
         //
-        var menu = document.getElementById('menu');
-        var button = menu.getElementsByClassName('button')[0];
-        button.addEventListener('click', function() {
-            var h1 = document.getElementsByTagName('h1')[0];
-            fade.out(h1, 250);
+        $$('#menu .button').on('click', function() {
+            var h1 = $$('h1');
+            fade.out(h1.el[0], 250);
             fade.out(menu, 250).then(function() {
-                h1.classList.add('small');
-                fade.in(h1, 250);
+                menu.remove();
+                h1.addClass('small');
+                fade.in(h1.el[0], 250);
                 resolve();
             });
         });
     });
-    var loading = document.getElementById('loading');
+    var loading = $$('#loading');
     fade.out(loading, 250).then(function() {
         loading.remove();
-        fade.in(document.getElementById('menu'), 250);
+        fade.in(menu, 250);
+        //
+        $$('#zoom-container .item-image').on('click', function() {
+            fade.out($$('#zoom-container'), 100);
+        });
     });
     //
     return promise;

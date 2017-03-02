@@ -4,7 +4,10 @@
   window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-function MyAnime(el, param, time) {
+function MyAnime(target, param, time) {
+    //
+    var el = target.el || target;
+    //
     var startTime = Date.now();
     //
     param.forEach(function(e) {
@@ -36,7 +39,9 @@ function MyAnime(el, param, time) {
     return promise;
 }
 
-function Fade(el, time, sw) {
+function Fade(target, time, sw) {
+    var el = target.el || target;
+    //
     if (sw) {
         el.style.opacity = 0;
         el.style.display = '';
@@ -47,9 +52,7 @@ function Fade(el, time, sw) {
     var anime = new MyAnime(el, param, time);
     anime.then(function() {
         el.style.opacity = '';
-        if (!sw) {
-            el.style.display = 'none';
-        }
+        !sw && (el.style.display = 'none');
     });
     return anime;
 }
@@ -68,9 +71,11 @@ function Collection(json) {
     var _this = this;
     this.data = json;
     this.setRows();
+    this.waypoint = new Waypoint();
+    this.loaded = false;
+    this.infinit = false; //for debug
     //
     window.addEventListener('orientationchange', function() {
-        console.log('orient')
         _this.orient();
     });
     //
@@ -82,33 +87,41 @@ function Collection(json) {
 Collection.prototype.start = function() {
     console.log('global start');
     var _this = this;
-    var main = document.getElementById('main');
-    fade.in(main, 250).then(function() {
+    fade.in($$('#main'), 250).then(function() {
         _this.restart();
     });
 };
 
 Collection.prototype.restart = function() {
     this.index = 0;
-    waypoint.on();
+    this.fillMode = false;
+    this.addStop = false;
+    this.waypoint.on();
+    //
+    scrollEvent.on(this);
+    //
+    $$('#rows-container').removeClass('stretch');
     this.addItem();
 };
 
 Collection.prototype.orient = function() {
-    document.getElementById('rows-container').innerHTML = '';
+    $$('#rows-container').html();
     this.setRows();
+    scrollEvent.off();
     this.restart();
 };
 
 Collection.prototype.setRows = function() {
-    var rows = Math.floor(window.innerWidth / 160);
-    if (rows == 0) {
-        rows = 1;
+    var rows = Math.floor(window.innerWidth / 160) || 1;
+    if (window.innerHeight > window.innerWidth) {
+        var max = Math.floor(this.data.length / 4);
+    } else {
+        var max = Math.floor(this.data.length / 3);
     }
+    rows > max && (rows = max);
     //
-    var container = document.getElementById('rows-container');
     for (var i = 0; i < rows; i++) {
-        container.insertAdjacentHTML("beforeend", '<ul class="item-container"></ul>');
+        $$('#rows-container').append($$('$$ul').addClass('item-container'));
     }
 };
 //
@@ -118,24 +131,28 @@ Collection.prototype.check = function() {
 //
 Collection.prototype.addItem = function() {
     var _this = this;
-    var waypointTop = getOffset(document.getElementById('waypoint')).top;
+    if (!this.fillMode && this.addStop && this.loaded) {
+        this.waypoint.off();
+        return false;
+    }
     // https://github.com/oneuijs/You-Dont-Need-jQuery#promises
     var scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-    if ((waypointTop - scrollTop + 12) < window.innerHeight) {
+    if ((_this.waypoint.top() - scrollTop + 12) < window.innerHeight) {
         scrollEvent.off();
         this.loadItem()
             //次のアイテムがある場合はresolveが返ってきて、引き続きアイテム挿入を呼び出す
             .then(function() {
-                waypoint.move();
+                _this.waypoint.move();
                 //画面下まで到達または閉じるボタンが押された場合読み込み中断
                 if (!_this.addItem()) {
                     scrollEvent.on(_this);
                     console.log('addItem stop');
+                    _this.addStop = true;
                 }
             }, function() {
             // //次のアイテムがない場合はrejectが返ってきて終了
                 console.log('item loaded');
-                waypoint.off();
+                _this.waypoint.off();
             });
         return true;
     } else {
@@ -144,14 +161,15 @@ Collection.prototype.addItem = function() {
 };
 //
 Collection.prototype.loadItem = function() {
-    // console.log('loadItem - index : %d', this.index);
+    var index = this.index;
     var tmp = this.getJSON();
-    //
+    //check item loaded
     if (!tmp) {
+        console.log('check')
         var promise = new Promise(function(resolve, reject) {
             setTimeout(function() {
                 reject();
-            }, 0);
+            }, 1);
         });
         return promise;
     }
@@ -161,31 +179,24 @@ Collection.prototype.loadItem = function() {
         //
         function appendSVG() {
             //
-            var target = document.createElement('dd');
-            target.classList.add('item-image');
+            var target = $$('$$dd').addClass('item-image');
             //
-            var dl = document.createElement('dl');
-            dl.classList.add('small');
-            dl.setAttribute('title', tmp.title);
-            dl.setAttribute('source_url', tmp.link);
-            dl.appendChild(target);
+            var dl = $$('$$dl')
+                .addClass('small')
+                .setAttr({title: tmp.title, source_url: tmp.link});
             //
-            var li = document.createElement('li');
-            li.classList.add('item');
-            li.style.display = 'none';
-            li.appendChild(dl);
+            var li = $$('$$li').addClass('item').hide();
             //
-            var waypoint = document.getElementById('waypoint');
-            waypoint.parentNode.insertBefore(li, waypoint);
+            _this.waypoint.before(li.append(dl.append(target)));
             //
             if (tmp.data != 'image not found') {
-                target.innerHTML = tmp.data;
-                target.addEventListener('click', function(e) {
+                target.html(tmp.data);
+                target.on('click', function(e) {
                     createZoom(tmp, e);
                 });
             } else {
                 console.log('no image...')
-                target.innerHTML = '<span class="bold9 small">Not Found.</span>';
+                target.html('<span class="bold9 small">Not Found.</span>');
             }
             //
             _this.showItem(li).then(function() {
@@ -204,9 +215,10 @@ Collection.prototype.loadItem = function() {
                 if (request.status >= 200 && request.status < 400) {
                     //success
                     tmp.data = request.responseText;
+                    console.log('SVG Loaded : %d', index);
                 } else {
                     //false
-                    console.log('File Not Found...');
+                    console.log('File Not Found : %d', index);
                     tmp.data = 'image not found';
                 }
                 appendSVG();
@@ -218,15 +230,11 @@ Collection.prototype.loadItem = function() {
 };
 //
 Collection.prototype.showItem = function(li) {
-    var item = this;
-    var duration = 0;
+    var _this = this;
+    var duration = 1;
     var promise = new Promise(function(resolve, reject) {
         fade.in(li, duration).then(function() {
-            if (item.check()) {
-                resolve();
-            } else {
-                reject();
-            }
+            _this.check() ? resolve() : reject();
         });
     });
     return promise;
@@ -236,11 +244,14 @@ Collection.prototype.getJSON = function() {
     if (this.check()) {
         var tmp = this.data[this.index];
         this.index ++;
-        //fill mode
-        if (this.index >= this.data.length) {
-            console.log('fill mode')
-            this.index = 0;
+        //
+        if (this.index == this.data.length && !this.loaded) {
+            console.log('svg files loaded');
+            this.loaded = true;
         }
+        this.loaded && !this.infinit && this.addStop && (this.fillMode = false);
+        //fill mode
+        this.fillMode && this.index >= this.data.length && (this.index = 0);
     } else {
         var tmp = false;
     }
@@ -248,51 +259,43 @@ Collection.prototype.getJSON = function() {
 };
 
 //
-(function() {
-    var zoom_container = document.getElementById('zoom-container');
-    var item_image = document.getElementsByClassName('item-image');
-    //
-    item_image[0].addEventListener('click', function() {
-        var download = document.getElementById('download');
-        fade.out(download, 100);
-        fade.out(zoom_container, 100);
-    });
-})();
-//
-var waypoint = {
-    on: function() {
-        var container = document.getElementById('rows-container');
-        target = container.childNodes[this.calc()];
-        target.innerHTML = '<li id="waypoint" class="anime-blink"><div><span>Now Loading...</span></div></li>';
-    },
-    off: function() {
-        document.getElementById('waypoint').remove();
-    },
-    calc : function() {
+function Waypoint() {
+    var waypoint = $$('#waypoint');
+    waypoint.on = function() {
+        this.show();
+    };
+    waypoint.off = function() {
+        scrollEvent.off();
+        $$('#rows-container').addClass('stretch');
+        this.hide();
+    };
+    waypoint.calc = function() {
         var heightList = [];
-        var container = document.getElementById('rows-container');
-        var children = container.childNodes;
-        for (var i = 0; i < children.length; i++) {
-            heightList.push(children[i].clientHeight);
+        var children = $$('#rows-container').children();
+        for (var i = 0; i < children.length(); i++) {
+            heightList.push(children.el[i].clientHeight);
         }
         return heightList.indexOf(Math.min.apply(null, heightList));
-    },
-    move : function() {
-        var container = document.getElementById('rows-container');
-        target = container.childNodes[this.calc()];
-        var waypoint = document.getElementById('waypoint');
-        target.appendChild(waypoint);
-    }
-};
+    };
+    waypoint.move = function() {
+        $$('#rows-container').children(this.calc()).append(this);
+    };
+    waypoint.top = function() {
+        return getOffset(this.el).top;
+    };
+    waypoint.move();
+    return waypoint;
+}
 //
 var scrollEvent = {
-    on: function(tmp) {
-        window.addEventListener('scroll', function() {
-            tmp.addItem();
-        });
+    on: function(e) {
+        this.func = function() {
+            e.addItem();
+        };
+        window.addEventListener('scroll', this.func, false);
     },
     off: function() {
-        window.removeEventListener('scroll', null);
+        window.removeEventListener('scroll', this.func, false);
     }
 };
 //
@@ -300,59 +303,58 @@ var zoomEvent = {
     anime: function(e) {
         var x = e.pageX;
         var y = e.pageY - document.body.scrollTop;
-        var zoom_container = document.getElementById('zoom-container');
         //
         var param = [
-            {style: 'top', start: y, end: 0, unit: 'px'},
-            {style: 'left', start: x, end: 0, unit: 'px'},
-            {style: 'width', start: 0, end: 100, unit: '%'},
-            {style: 'height', start: 0, end: 100, unit: '%'}
+            {style: 'top', start: y, end: 0, unit: 'px'}, {style: 'left', start: x, end: 0, unit: 'px'},
+            {style: 'width', start: 0, end: 100, unit: '%'}, {style: 'height', start: 0, end: 100, unit: '%'}
         ];
-        new MyAnime(zoom_container, param, 100).then(function() {
-            fade.in(download, 250);
-        });
+        new MyAnime($$('#zoom-container'), param, 100);
     }
 };
 //
 function createZoom(data, event) {
-    var zoom_container = document.getElementById('zoom-container');
-    zoom_container.getElementsByClassName('item-image')[0].innerHTML = data.data;
     //
-    var link = zoom_container.getElementsByClassName('link')[0];
-    link.innerHTML = '<span>LINK</span><a href="//goo.gl/' + data.link + '" target="_blank">' + data.title + '</a>';
+    $$('#zoom-container .item-image').html(data.data);
     //
-    var a = document.getElementById('download').getElementsByTagName('a')[0];
-    a.setAttribute('href', 'svg/' + data.url + '.svg');
-    a.setAttribute('download', data.url + '.svg');
-    var own = document.getElementById('own');
-    if (data.own) {
-        own.classList.add('own');
-    } else {
-        own.classList.remove('own');
-    }
+    $$('#link').html()
+        .append($$('$$span').html('LINK'))
+        .append($$('$$a')
+            .setAttr({href: '//goo.gl/' + data.link, target: '_blank'})
+            .html(data.title)
+        );
+    //
+    $$('#download a').setAttr({href: 'svg/' + data.url + '.svg', download: data.url + '.svg'});
+    //
+    var own = $$('#own');
+    data.own && own.addClass('own') || own.removeClass('own');
+    //
     zoomEvent.anime(event);
 }
 
 //
 function start() {
+    var menu = $$('#menu');
     var promise = new Promise(function(resolve) {
         //
-        var menu = document.getElementById('menu');
-        var button = menu.getElementsByClassName('button')[0];
-        button.addEventListener('click', function() {
-            var h1 = document.getElementsByTagName('h1')[0];
-            fade.out(h1, 250);
+        $$('#menu .button').on('click', function() {
+            var h1 = $$('h1');
+            fade.out(h1.el[0], 250);
             fade.out(menu, 250).then(function() {
-                h1.classList.add('small');
-                fade.in(h1, 250);
+                menu.remove();
+                h1.addClass('small');
+                fade.in(h1.el[0], 250);
                 resolve();
             });
         });
     });
-    var loading = document.getElementById('loading');
+    var loading = $$('#loading');
     fade.out(loading, 250).then(function() {
         loading.remove();
-        fade.in(document.getElementById('menu'), 250);
+        fade.in(menu, 250);
+        //
+        $$('#zoom-container .item-image').on('click', function() {
+            fade.out($$('#zoom-container'), 100);
+        });
     });
     //
     return promise;
@@ -371,6 +373,138 @@ function start() {
         }
     }
     request.send(null);
+})();
+function F(selector) {
+  this.selector = selector;
+  // this.el = $$(selector);
+  this.el = (function(selector) {
+    if (selector.split('$$').length == 2) {
+      return document.createElement(selector.split('$$')[1]);
+    }
+    //selector
+    var selector = selector.split(' ');
+    //
+    function get(parent) {
+      if (selector.length == 0){
+        return parent;
+      }
+      var tmp = selector.shift();
+      if (tmp.split('#').length == 2) {
+        //
+        return get(parent.getElementById(tmp.split('#')[1]));
+      } else if (tmp.split('.').length == 2) {
+        //
+        return parent.getElementsByClassName(tmp.split('.')[1]);
+      } else {
+        //
+        return parent.getElementsByTagName(tmp);
+      }
+    }
+    //
+    return get(document);
+  })(selector);
+}
+//
+F.prototype.addClass = function(_class) {
+  if (this.el.length > 0) {
+    for (var i = 0; i < this.el.length; i++) {
+      this.el[i].classList.add(_class);
+    }
+  } else {
+    this.el.classList.add(_class);
+  }
+  return this;
+};
+F.prototype.removeClass = function(_class) {
+  this.el.classList.remove(_class);
+  return this;
+}
+//
+F.prototype.setAttr = function(attr) {
+  function set(el, attr) {
+    for (var key in attr) {
+      var value = attr[key];
+      el.setAttribute(key, value);
+    }
+  }
+  if (this.el.length > 0) {
+    for (var i = 0; i < this.el.length; i++) {
+      set(this.el[i], attr);
+    }
+  } else {
+    set(this.el, attr);
+  }
+  return this;
+};
+//
+F.prototype.children = function(index) {
+  this.el = isFinite(index) && this.el.childNodes[index] || this.el.childNodes;
+  return this;
+};
+//
+F.prototype.html = function(html) {
+  function set(target, html) {
+    target.innerHTML = html || '';
+  }
+  if (this.el.length > 0) {
+    for (var i = 0; i < this.el.length; i++) {
+      set(this.el[i], html);
+    }
+  } else {
+    set(this.el, html);
+  }
+  return this;
+};
+//
+F.prototype.remove = function() {
+  this.el.parentNode.removeChild(this.el);
+};
+//
+F.prototype.hide = function() {
+  this.el.style.display = 'none';
+  return this;
+};
+//
+F.prototype.show = function() {
+  this.el.style.display = '';
+  return this;
+};
+//
+F.prototype.append = function(el) {
+  this.el.appendChild(el.el || el);
+  return this;
+};
+//
+F.prototype.length = function() {
+  return this.el.length;
+};
+//
+F.prototype.on = function(event, func) {
+  function set(el, event, func) {
+    el.addEventListener(event, func);
+  }
+  //
+  if (this.el.length > 0) {
+    for (var i = 0; i < this.el.length; i++) {
+      set(this.el[i], event, func);
+    }
+  } else {
+    set(this.el, event, func);
+  }
+  return this;
+};
+//
+F.prototype.before = function(el) {
+  this.el.parentNode.insertBefore(el.el || el, this.el);
+  return this;
+};
+//
+//
+//
+(function() {
+  window.$$ = function(selector) {
+    return new F(selector);
+  }
 })();
 // https://github.com/oneuijs/You-Dont-Need-jQuery#promises
 // Native

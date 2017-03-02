@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel='stylesheet' type='text/css' href='//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css' />
-  <link rel='stylesheet' type='text/css' href='dist/top.css' />
+  <link rel='stylesheet' type='text/css' href='dist/style.css' />
 </head>
 <body>
   <header>
@@ -29,15 +29,16 @@
   </div>
   <div id='main' style='display:none;'>
     <div id='rows-container'></div>
+    <li id="waypoint" class="anime-blink"><div><span>Now Loading...</span></div></li>
     <div id='zoom-container' style='display: none;'>
       <div class='item'>
         <dl class='small'>
-          <dd id='own'></dd>
+          <dd id='own'><span></span><span></span></dd>
           <dd class='item-image'></dd>
-          <dd class='link'></dd>
+          <dd id='link'></dd>
+          <dd id='download'><a>DL</a></dd>
         </dl>
       </div>
-      <div id='download' style='display:none;'><a>DL</a></div>
     </div>
   </div>
   <footer>
