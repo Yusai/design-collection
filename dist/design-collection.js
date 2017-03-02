@@ -178,6 +178,12 @@ Collection.prototype.loadItem = function() {
     var promise = new Promise(function(resolve, reject) {
         //
         function appendSVG() {
+            if (tmp.data == 'image not found') {
+                console.log('no image...');
+                _this.check() ? resolve() : reject();
+                // target.html('<span class="bold9 small">Not Found.</span>');
+                return;
+            }
             //
             var target = $$('$$dd').addClass('item-image');
             //
@@ -189,15 +195,10 @@ Collection.prototype.loadItem = function() {
             //
             _this.waypoint.before(li.append(dl.append(target)));
             //
-            if (tmp.data != 'image not found') {
-                target.html(tmp.data);
-                target.on('click', function(e) {
-                    createZoom(tmp, e);
-                });
-            } else {
-                console.log('no image...')
-                target.html('<span class="bold9 small">Not Found.</span>');
-            }
+            target.html(tmp.data);
+            target.on('click', function(e) {
+                createZoom(tmp, e);
+            });
             //
             _this.showItem(li).then(function() {
                 resolve();
