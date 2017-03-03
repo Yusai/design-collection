@@ -5,6 +5,7 @@
 })();
 
 function MyAnime(target, param, time) {
+    var param = param.length ? param : [param];
     //
     var el = target.el || target;
     //

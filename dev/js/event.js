@@ -6,8 +6,27 @@ function Waypoint() {
     };
     waypoint.off = function() {
         scrollEvent.off();
-        $$('#rows-container').addClass('stretch');
         this.hide();
+        //http://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
+        var rows_container = $$('#rows-container ul');
+        var maxHeight = Math.max(window.innerHeight, Math.max.apply(null, Array.prototype.slice.call(rows_container.el).map(function(ul) {
+            return ul.clientHeight;
+        })));
+        var promise = [];
+        for (var i = 0; i < rows_container.el.length; i++) {
+            var param = {style : 'height', start: rows_container.el[i].clientHeight, end: maxHeight, unit: 'px'};
+            promise[i] = new Promise(function(resolve, reject) {
+                new MyAnime(rows_container.el[i], param, 100).then(function() {
+                    resolve();
+                });
+            });
+        };
+        Promise.all(promise).then(function() {
+            $$('#rows-container').addClass('stretch');
+            for (var i = 0; i < rows_container.el.length; i++) {
+                rows_container.el[i].style.height = '';
+            }
+        });
     };
     waypoint.calc = function() {
         var heightList = [];

@@ -75,7 +75,6 @@ footer {
   align-items: center;
   justify-content: center;
   display: flex;
-  border-radius: 0.1vmin;
 }
 #waypoint span {
   background: white;
