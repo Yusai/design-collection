@@ -4,7 +4,6 @@ function Collection(json) {
     this.data = json;
     this.setRows();
     this.waypoint = new Waypoint();
-    this.loaded = false;
     this.infinit = false; //for debug
     //
     window.addEventListener('orientationchange', function() {
@@ -28,6 +27,7 @@ Collection.prototype.restart = function() {
     this.index = 0;
     this.fillMode = false;
     this.addStop = false;
+    this.loaded = false;
     this.waypoint.on();
     //
     scrollEvent.on(this);
