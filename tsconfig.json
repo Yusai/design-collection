@@ -1,0 +1,9 @@
+{
+    "files": [
+        "dev/ts/*.ts"
+    ],
+    "compilerOption": {
+        "noImplicitAny": true,
+        "target": "es5"
+    }
+}
