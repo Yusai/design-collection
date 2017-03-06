@@ -1,8 +1,8 @@
-
+//
 function $$(selector) {
   return new C(selector);
 }
-
+//
 class C {
   selector: string;
   el: any;
@@ -161,9 +161,7 @@ class C {
     var p;
     if (this.el.length) {
       //all
-      p = Promise.all(Array.prototype.slice.call(this.el).map((el) => {
-        return _fade(el, time, sw);
-      }));
+      p = Promise.all(Array.prototype.slice.call(this.el).map((el) => _fade(el, time, sw)));
     } else {
       //single
       p = _fade(this.el, time, sw);

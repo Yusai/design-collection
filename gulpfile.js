@@ -9,20 +9,11 @@ var webserver = require('gulp-webserver');
 
 //
 function concat_js() {
-    return gulp.src(['./dev/js/*.js', './dev/tmp/*.js'])
+    return gulp.src(['./dev/tmp/*.js'])
         .pipe(concat('design-collection.js'))
-        // .pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('./dist/'));
 }
-//
-gulp.task('js', function() {
-    return concat_js();
-});
-//
-gulp.task('watch-js', function() {
-    return gulp.watch('./dev/js/*.js', ['js']);
-})
-
 //TypeScript
 gulp.task('ts', ['ts-compile'], function() {
     return concat_js();
@@ -48,7 +39,7 @@ gulp.task('watch-less', function() {
     return gulp.watch('./dev/less/*.less', ['less']);
 });
 //
-gulp.task('watch', ['watch-less', 'watch-js', 'watch-ts']);
+gulp.task('watch', ['watch-less', 'watch-ts']);
 //
 gulp.task('webserver', function() {
     gulp.src('./')
@@ -56,7 +47,7 @@ gulp.task('webserver', function() {
             livereload: {
                 enable: true,
                 filter: (fileName) => {
-                    return !fileName.match(/.dev$/);
+                    return !fileName.match(/.ts$/);
                 }
             }
         }));

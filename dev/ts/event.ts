@@ -1,7 +1,7 @@
 //
 var scrollEvent = {
     on: function(e) {
-        this.func = () => {e.addItem();};
+        this.func = () => {e.addItem()};
         window.addEventListener('scroll', this.func, false);
     },
     off: function() {
