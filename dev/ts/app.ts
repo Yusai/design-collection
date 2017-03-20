@@ -28,7 +28,7 @@
     }
     //
     var request = new XMLHttpRequest();
-    request.open('get', 'json/data.json', true);
+    request.open('get', 'dist/list.json', true);
     request.onload = (event) => {
         if (request.status >= 200 && request.status < 400) {
             //success
