@@ -26,17 +26,18 @@ function createZoom(data, event) {
     //
     $$('#zoom-container .item-image').html(data.data);
     //
-    $$('#link').html()
-        .append($$('$$span').html('LINK'))
-        .append($$('$$a')
-            .setAttr({href: `//goo.gl/${data.link}` , target: '_blank'})
-            .html(data.title)
-        );
+    // $$('#link').html()
+    //     .append($$('$$span').html('LINK'))
+    //     .append($$('$$a')
+    //         .setAttr({href: `//goo.gl/${data.link}` , target: '_blank'})
+    //         .html(data.title)
+    //     );
     //
-    $$('#download a').setAttr({href: `svg/${data.url}.svg`, download: `${data.url}.svg`});
+    // $$('#download a').setAttr({href: `svg/${data.url}.svg`, download: `${data.url}.svg`});
+    $$('#download a').setAttr({href: 'https://yusai.github.io/design-collection/' + data.path, download: data.name, target: '_blank'});
     //
-    var own = $$('#own');
-    data.own && own.addClass('own') || own.removeClass('own');
+    // var own = $$('#own');
+    // data.own && own.addClass('own') || own.removeClass('own');
     //
     zoomEvent.anime(event);
 }

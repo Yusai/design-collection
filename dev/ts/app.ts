@@ -1,5 +1,5 @@
 //
-(() => {
+// (() => {
     //
     function start() {
         var menu = $$('#menu');
@@ -27,14 +27,17 @@
         });
     }
     //
-    var request = new XMLHttpRequest();
-    request.open('get', 'dist/list.json', true);
-    request.onload = (event) => {
-        if (request.status >= 200 && request.status < 400) {
-            //success
-            var json = JSON.parse(request.responseText);
-            start().then(() => console.log(new Collection(json)));
-        }
-    }
-    request.send(null);
-})();
+//     var request = new XMLHttpRequest();
+//     request.open('get', 'dist/list.json', true);
+//     request.onload = (event) => {
+//         if (request.status >= 200 && request.status < 400) {
+//             //success
+//             var json = JSON.parse(request.responseText);
+//             start().then(() => console.log(new Collection(json)));
+//         }
+//     }
+//     request.send(null);
+// })();
+function foo(response) {
+    start().then(() => console.log(new Collection(response.data)));
+}

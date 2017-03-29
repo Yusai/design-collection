@@ -7,16 +7,12 @@ var tsProject = ts.createProject('tsconfig.json');
 
 var webserver = require('gulp-webserver');
 
-//
-function concat_js() {
+//TypeScript
+gulp.task('ts', ['ts-compile'], function() {
     return gulp.src(['./dev/tmp/*.js'])
         .pipe(concat('design-collection.js'))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/'));
-}
-//TypeScript
-gulp.task('ts', ['ts-compile'], function() {
-    return concat_js();
 });
 //
 gulp.task('ts-compile', function() {

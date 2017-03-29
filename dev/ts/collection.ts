@@ -117,7 +117,7 @@ class Collection {
         function loadSVG(tmp) {
             return new Promise((resolve, reject) => {
                 var request = new XMLHttpRequest();
-                request.open('get', `svg/${tmp.url}.svg`, true);
+                request.open('get', tmp.download_url, true);
                 request.onload = (event) => {
                     if (request.status >= 200 && request.status < 400) {
                         //success
@@ -149,8 +149,8 @@ class Collection {
                 }
                 //
                 var dl = $$('$$dl')
-                    .addClass('small')
-                    .setAttr({title: tmp.title, source_url: tmp.link});
+                    .addClass('small');
+                    // .setAttr({title: tmp.title, source_url: tmp.link});
                 //
                 var li = $$('$$li').addClass('item').hide();
                 //
